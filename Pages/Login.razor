@@ -1,0 +1,21 @@
+﻿@page "/Login"
+@inject NavigationManager NavMangr
+<h3>Login</h3>
+<div>
+    <label>Email: </label>
+    <input @bind="Email"/>
+    <label>Password: </label>
+    <input @bind="Pass"/>
+</div>
+
+<button class="btn btn-primary" @onclick="LoginRediect"> Login </button>
+
+@code {
+
+    private string Email { get; set; }
+    private string Pass { get; set; }
+    private void LoginRediect()
+    {
+        NavMangr.NavigateTo("/HomeAfterLogin");
+    }
+}

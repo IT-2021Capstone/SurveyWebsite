@@ -1,0 +1,35 @@
+﻿@page "/HomeAfterLogin"
+
+
+<h3>Welcome to Centralia College Survey Site!</h3>
+<br />
+<h4>Answer the Question of the day!</h4>
+<br />
+<h6> @QOTD </h6>
+<div>
+
+    @foreach (var Choice in new[] { Answers.Blue, Answers.Green, Answers.Red, Answers.Yellow})
+    {
+        <label>
+            <input type="radio" 
+                   value="@Choice" 
+                   checked="@(Current == Choice)" 
+                   @onchange="@(() => {Current = Choice;})"/> @Choice.ToString()
+        </label>
+    <br />
+    }
+    <button type="submit" @onclick="@toggle"> Submit </button>
+    <br />
+    <label hidden="@HideLabel">Answer has been submitted! <br /> Thank you for your participation!</label>
+</div>
+@code {
+    private bool HideLabel { get; set; } = true;
+    private string QOTD = "What is your favorite Color?";
+    enum Answers { Blue, Red, Green, Yellow };
+    Answers Current = Answers.Blue;
+
+    private void toggle()
+    {
+        HideLabel = !HideLabel;
+    }
+}

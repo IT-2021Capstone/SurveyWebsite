@@ -1,0 +1,12 @@
+﻿@page "/Home"
+@inject NavigationManager NavMangr
+<h3>Home</h3>
+<h2>Welcome to Centralia College Survey Site</h2>
+<p> If you would like to participate in surveys please create an account or login to an existing one.</p>
+<button class="btn btn-primary" @onclick ="LoginRediect">Login Page</button>
+@code {
+    private void LoginRediect()
+    {
+        NavMangr.NavigateTo("/Login");
+    }
+}

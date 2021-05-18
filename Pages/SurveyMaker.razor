@@ -1,0 +1,40 @@
+﻿@page "/SurveyMaker"
+
+<div>
+    <h3>SurveyMaker</h3>
+    <br />
+    <h4>Question @QCount</h4>
+    <br />
+    <div>
+        <label>
+            Question Type:
+            <select class="custom-select">
+                <option value="Select" selected disabled="disabled">(Choose Type)</option>
+                @foreach (var Type in new[] { Qtypes.Multiple_Choice, Qtypes.Multiple_Answer, Qtypes.Dropdown, Qtypes.Long_Text })
+                {
+                    <option value="@Type">@Type.ToString().Replace("_", " ")</option>
+                }
+            </select>
+        </label>
+        <br />
+        <label>Question:</label>
+        <textarea>
+
+            </textarea>
+
+        <br />
+        <button>New Question</button>
+    </div>
+</div>
+@code {
+    static int QCount = 1;
+    int current = QCount;
+
+    enum Qtypes
+    {
+        Multiple_Choice,
+        Multiple_Answer,
+        Dropdown,
+        Long_Text
+    }
+}

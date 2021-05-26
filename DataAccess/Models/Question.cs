@@ -9,8 +9,8 @@ namespace DataAccess.Models
     {
         public Question()
         {
-            MutipleChoiceResponses = new HashSet<MutipleChoiceResponse>();
-            MutipleChoiceTexts = new HashSet<MutipleChoiceText>();
+            MutipleChoiceResponses = new HashSet<MultipleChoiceResponse>();
+            MutipleChoiceTexts = new HashSet<MultipleChoiceText>();
             OpenEndedResponses = new HashSet<OpenEndedResponse>();
             TrueFalseResponses = new HashSet<TrueFalseResponse>();
         }
@@ -22,8 +22,8 @@ namespace DataAccess.Models
 
         public virtual QuestionType QuestionTypeNavigation { get; set; }
         public virtual Surveylist Survey { get; set; }
-        public virtual ICollection<MutipleChoiceResponse> MutipleChoiceResponses { get; set; }
-        public virtual ICollection<MutipleChoiceText> MutipleChoiceTexts { get; set; }
+        public virtual ICollection<MultipleChoiceResponse> MutipleChoiceResponses { get; set; }
+        public virtual ICollection<MultipleChoiceText> MutipleChoiceTexts { get; set; }
         public virtual ICollection<OpenEndedResponse> OpenEndedResponses { get; set; }
         public virtual ICollection<TrueFalseResponse> TrueFalseResponses { get; set; }
     }

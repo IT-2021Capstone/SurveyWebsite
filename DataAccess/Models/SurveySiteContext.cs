@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DataAccess.Models
 {
-    public partial class SurveySiteContext : DbContext
+    public partial class SurveySiteContext : Microsoft.EntityFrameworkCore.DbContext
     {
         public SurveySiteContext()
         {
@@ -18,8 +18,8 @@ namespace DataAccess.Models
         }
 
         public virtual DbSet<Login> Logins { get; set; }
-        public virtual DbSet<MutipleChoiceResponse> MutipleChoiceResponses { get; set; }
-        public virtual DbSet<MutipleChoiceText> MutipleChoiceTexts { get; set; }
+        public virtual DbSet<MultipleChoiceResponse> MutipleChoiceResponses { get; set; }
+        public virtual DbSet<MultipleChoiceText> MutipleChoiceTexts { get; set; }
         public virtual DbSet<OpenEndedResponse> OpenEndedResponses { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<QuestionOfTheDay> QuestionOfTheDays { get; set; }
@@ -70,7 +70,7 @@ namespace DataAccess.Models
                     .HasConstraintName("FK_Logins_RoleType");
             });
 
-            modelBuilder.Entity<MutipleChoiceResponse>(entity =>
+            modelBuilder.Entity<MultipleChoiceResponse>(entity =>
             {
                 entity.HasKey(e => e.MutipleChoiceId)
                     .HasName("PK_MutipleChoice");
@@ -86,7 +86,7 @@ namespace DataAccess.Models
                     .HasConstraintName("FK_MutipleChoiceResponses_Questions");
             });
 
-            modelBuilder.Entity<MutipleChoiceText>(entity =>
+            modelBuilder.Entity<MultipleChoiceText>(entity =>
             {
                 entity.HasKey(e => e.MutipleChoiceAnswerId);
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class MutipleChoiceResponse
+    public partial class MultipleChoiceResponse
     {
         public int MutipleChoiceId { get; set; }
         public int QuestionId { get; set; }

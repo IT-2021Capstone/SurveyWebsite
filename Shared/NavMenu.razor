@@ -1,4 +1,4 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">SurveyWebsite</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -7,29 +7,24 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        <li class="nav-item px-3">
+        @*<li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
         </li>
         <li class=" nav-item px-3">
             <NavLink class="nav-link" href="QotDError">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Error
+                <span class="oi oi-trash" aria-hidden="true"></span> Error
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="FAQ">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> FAQ
+                <span class="oi oi-question-mark" aria-hidden="true"></span> FAQ
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="Login">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Login Page
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="Home">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Home
             </NavLink>
         </li>
         <li class="nav-item px-3">

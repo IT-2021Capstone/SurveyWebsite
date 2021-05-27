@@ -1,40 +1,71 @@
 ﻿@page "/SurveyMaker"
-
+@using DataAccessLibrary.Models
+@using System.Collections.Generic
+@inherits QuestionListBase
 <div>
     <h3>SurveyMaker</h3>
     <br />
-    <h4>Question @QCount</h4>
-    <br />
-    <div>
-        <label>
-            Question Type:
-            <select class="custom-select">
-                <option value="Select" selected disabled="disabled">(Choose Type)</option>
-                @foreach (var Type in new[] { Qtypes.Multiple_Choice, Qtypes.Multiple_Answer, Qtypes.Dropdown, Qtypes.Long_Text })
-                {
-                    <option value="@Type">@Type.ToString().Replace("_", " ")</option>
-                }
-            </select>
-        </label>
+    @foreach (Question question in Questions)
+    {
+        <h4>Question @question.ID</h4>
         <br />
-        <label>Question:</label>
-        <textarea>
+        <div>
 
+            <label>
+                Question Type:
+                <select class="custom-select">
+                    <option value="Select" selected disabled="disabled">(Choose Type)</option>
+                    @foreach (var Type in new[] { Qtypes.Multiple_Choice, Qtypes.Multiple_Answer, Qtypes.Dropdown, Qtypes.Long_Text })
+                    {
+                        <option value="@Type">@Type.ToString().Replace("_", " ")</option>
+                    }
+                </select>
+            </label>
+            <br />
+            <label>Question: </label>
+            <br />
+            <textarea>
+                   @question.Questions.ToString()
             </textarea>
-
-        <br />
-        <button>New Question</button>
-    </div>
+            <br />
+            <label>Question Options:</label>
+            @*@foreach (QuestionOption QO in question.QOpts)
+            { 
+                <label> Option @QO.ID</label>
+                <textarea>@QO.OptionText</textarea>
+            }*@
+            <button @onclick="@NewOption">Add Option</button>
+            <br />
+        </div>
+    }
+    <button @onclick="@NewQuestion">New Question</button>
+    <br />
+    <br />
 </div>
+<br />
+<br />
 @code {
-    static int QCount = 1;
-    int current = QCount;
+    enum Qtypes
+    {
+        Multiple_Choice,
+        Multiple_Answer,
+        Dropdown,
+        Long_Text
+    }
+    private void NewOption()
+    { 
+        
+    }
+    private void NewQuestion()
+    {
+        Questions = Questions.Concat(new[] {
+            new Question
+            {
+                ID = Questions.Count() + 1,
+                Questions = "How are you?"
+            }});
+    }
 
-enum Qtypes
-{
-    Multiple_Choice,
-    Multiple_Answer,
-    Dropdown,
-    Long_Text
+
 }
-}
+

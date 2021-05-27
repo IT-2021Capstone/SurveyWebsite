@@ -1,0 +1,57 @@
+﻿@page "/Results"
+@using DataAccess.Models
+@using DataAccess.Services
+@*@inherits OwningComponentBase<ResultsServices>*@
+@inject ResultsServices rs
+
+<h3>Results TEST Display </h3>
+
+@if (questiondetails == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Test</th>
+                    <th>Test</th>
+                    <th>Test</th>
+                    <th>Test</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (questiondetails == null)
+                {
+                    //no data?
+                }
+                else
+                {
+                    @foreach (var q in questiondetails)
+                        {
+                <tr>
+                    <td>Test Data</td>
+                    <td>Test Data</td>
+                    <td>Test Data</td>
+                    <td>@q.QuestionText</td>
+                </tr>
+                        }
+                    questiondetails = null;
+                }
+            </tbody>
+        </table>
+    }
+
+@code {
+    Question[] questiondetails;
+    SurveySiteContext ctx = new SurveySiteContext();
+
+    
+    protected override void OnInitialized()
+    {
+        //questiondetails = Service.GetQuestionDetails();
+        questiondetails = rs.GetQuestionDetails();
+
+    }
+}

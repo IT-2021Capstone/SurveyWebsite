@@ -26,11 +26,11 @@ a, .btn-link {
 }
 
 .invalid {
-    outline: 1px solid red;
+    outline: 1px solid white;
 }
 
 .validation-message {
-    color: red;
+    color: white;
 }
 
 #blazor-error-ui {

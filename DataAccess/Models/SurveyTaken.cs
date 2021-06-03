@@ -9,9 +9,9 @@ namespace DataAccess.Models
     {
         public int SurveyTakenId { get; set; }
         public int SurveyId { get; set; }
-        public int LoginId { get; set; }
+        public string LoginId { get; set; }
 
-        public virtual Login Login { get; set; }
+        public virtual AspNetUser Login { get; set; }
         public virtual Surveylist Survey { get; set; }
     }
 }

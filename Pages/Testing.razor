@@ -1,0 +1,22 @@
+﻿@page "/Testing"
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@inject Testingstuff ts
+@inherits OwningComponentBase<Testingstuff>
+
+
+<h3>Testing</h3>
+<button class="btn btn-primary" @onclick="questionAdd"> addQuestion </button>
+
+@code {
+
+
+
+    public void questionAdd()
+    {
+        
+        ts.SendQuestion(3, "question text", 1);
+        
+    }
+
+}

@@ -17,7 +17,13 @@ namespace DataAccess.Models
         {
         }
 
-        public virtual DbSet<Login> Logins { get; set; }
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual DbSet<MutipleChoiceResponse> MutipleChoiceResponses { get; set; }
         public virtual DbSet<MutipleChoiceText> MutipleChoiceTexts { get; set; }
         public virtual DbSet<OpenEndedResponse> OpenEndedResponses { get; set; }
@@ -25,7 +31,6 @@ namespace DataAccess.Models
         public virtual DbSet<QuestionOfTheDay> QuestionOfTheDays { get; set; }
         public virtual DbSet<QuestionOfTheDayResponse> QuestionOfTheDayResponses { get; set; }
         public virtual DbSet<QuestionType> QuestionTypes { get; set; }
-        public virtual DbSet<RoleType> RoleTypes { get; set; }
         public virtual DbSet<SurveyOrder> SurveyOrders { get; set; }
         public virtual DbSet<SurveyTaken> SurveyTakens { get; set; }
         public virtual DbSet<Surveylist> Surveylists { get; set; }
@@ -36,7 +41,7 @@ namespace DataAccess.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=.;Database=SurveySite;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Data source=.; Initial Catalog=SurveySite;Trusted_Connection=True;");
             }
         }
 
@@ -44,30 +49,113 @@ namespace DataAccess.Models
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
 
-            modelBuilder.Entity<Login>(entity =>
+            modelBuilder.Entity<AspNetRole>(entity =>
             {
-                entity.Property(e => e.LoginId).HasColumnName("LoginID");
+                entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedName] IS NOT NULL)");
 
-                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.Property(e => e.Name).HasMaxLength(256);
 
-                entity.Property(e => e.FirstName).HasMaxLength(50);
+                entity.Property(e => e.NormalizedName).HasMaxLength(256);
+            });
 
-                entity.Property(e => e.LastName).HasMaxLength(50);
+            modelBuilder.Entity<AspNetRoleClaim>(entity =>
+            {
+                entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
 
-                entity.Property(e => e.LoginUserName)
+                entity.Property(e => e.RoleId).IsRequired();
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetRoleClaims)
+                    .HasForeignKey(d => d.RoleId);
+            });
+
+            modelBuilder.Entity<AspNetUser>(entity =>
+            {
+                entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
+
+                entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                    .IsUnique()
+                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+
+                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+
+                entity.Property(e => e.UserName).HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<AspNetUserClaim>(entity =>
+            {
+                entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserClaims)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserLogin>(entity =>
+            {
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+                entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
+
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
+
+                entity.Property(e => e.ProviderKey).HasMaxLength(128);
+
+                entity.Property(e => e.UserId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
+
+                entity.Property(e => e.RoleId).IsRequired();
+
+                entity.Property(e => e.UserId)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(450);
 
-                entity.Property(e => e.PasswordHash).IsRequired();
+                entity.HasOne(d => d.Role)
+                    .WithMany()
+                    .HasForeignKey(d => d.RoleId);
 
-                entity.Property(e => e.UserAddress)
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.UserId);
+            });
+
+            modelBuilder.Entity<AspNetUserToken>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.Property(e => e.LoginProvider)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(128);
 
-                entity.HasOne(d => d.RoleNavigation)
-                    .WithMany(p => p.Logins)
-                    .HasForeignKey(d => d.Role)
-                    .HasConstraintName("FK_Logins_RoleType");
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(128);
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(450);
+
+                entity.HasOne(d => d.User)
+                    .WithMany()
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<MutipleChoiceResponse>(entity =>
@@ -174,15 +262,6 @@ namespace DataAccess.Models
                     .HasColumnName("QuestionType");
             });
 
-            modelBuilder.Entity<RoleType>(entity =>
-            {
-                entity.HasKey(e => e.RoleId);
-
-                entity.ToTable("RoleType");
-
-                entity.Property(e => e.RoleId).HasColumnName("RoleID");
-            });
-
             modelBuilder.Entity<SurveyOrder>(entity =>
             {
                 entity.HasNoKey();
@@ -214,7 +293,10 @@ namespace DataAccess.Models
 
                 entity.Property(e => e.SurveyTakenId).HasColumnName("SurveyTakenID");
 
-                entity.Property(e => e.LoginId).HasColumnName("LoginID");
+                entity.Property(e => e.LoginId)
+                    .IsRequired()
+                    .HasMaxLength(450)
+                    .HasColumnName("LoginID");
 
                 entity.Property(e => e.SurveyId).HasColumnName("SurveyID");
 
@@ -222,7 +304,7 @@ namespace DataAccess.Models
                     .WithMany(p => p.SurveyTakens)
                     .HasForeignKey(d => d.LoginId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SurveyTaken_Logins");
+                    .HasConstraintName("FK_SurveyTaken_AspNetUsers");
 
                 entity.HasOne(d => d.Survey)
                     .WithMany(p => p.SurveyTakens)
@@ -241,12 +323,14 @@ namespace DataAccess.Models
 
                 entity.Property(e => e.DateCreated).HasColumnType("datetime");
 
-                entity.Property(e => e.LoginId).HasColumnName("LoginID");
+                entity.Property(e => e.UserId)
+                    .HasMaxLength(450)
+                    .HasColumnName("UserID");
 
-                entity.HasOne(d => d.Login)
+                entity.HasOne(d => d.User)
                     .WithMany(p => p.Surveylists)
-                    .HasForeignKey(d => d.LoginId)
-                    .HasConstraintName("FK_Surveylist_Logins");
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_Surveylist_AspNetUsers");
             });
 
             modelBuilder.Entity<TrueFalseResponse>(entity =>

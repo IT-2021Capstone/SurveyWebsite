@@ -17,12 +17,12 @@ namespace SurveyWebsite.Pages
         }
 
 
-        public void SendQuestion()
+        public void SendQuestion(int id, string text, int qtype )
         {
             Question[] q;
-            var sureveyID = 3;
-            var questionText = "This is from the website";
-            var questionType = 1;
+            var sureveyID = id;
+            var questionText = text;
+            var questionType = qtype;
             SqlParameter param1 = new SqlParameter("@surveyID", sureveyID);
             SqlParameter param2 = new SqlParameter("@questionText", questionText);
             SqlParameter param3 = new SqlParameter("@questionType", questionType);
@@ -31,5 +31,6 @@ namespace SurveyWebsite.Pages
                 .ToArray();
 
         }
+        
     }
 }

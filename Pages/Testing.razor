@@ -1,4 +1,5 @@
 ﻿@page "/Testing"
+@using DataAccess.Models
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @inject Testingstuff ts
@@ -6,17 +7,43 @@
 
 
 <h3>Testing</h3>
-<button class="btn btn-primary" @onclick="questionAdd"> addQuestion </button>
+<button class="btn btn-primary" @onclick="questionAdd"> Add Three Questions </button>
 
 @code {
-
-
+    int _tempsurveyID = 3;
+    //List<Question> Questions= new List<Question>();
+    Question[] Questions;
 
     public void questionAdd()
     {
-        
-        ts.TestQuestion();
-        
+        //test of adding many questions at once, which feasably would be done via a submit button at the end of survey creation
+
+        Question question1 = new Question();
+        question1.QuestionText = "Question1 Text";
+        question1.QuestionType = 1;
+        Question question2 = new Question();
+        question2.QuestionText = "Question2 Text";
+        question2.QuestionType = 1;
+        Question question3 = new Question();
+        question3.QuestionText = "Question3 Text";
+        question3.QuestionType = 1;
+        //Questions.Add(question1);
+        //Questions.Add(question2);
+        //Questions.Add(question3);
+        //concatenating an array to add more questions may be inefficient, a list could be better
+        Questions.Concat(new[] { question1 });
+        Questions.Concat(new[] { question2 });
+        Questions.Concat(new[] { question3 });
+        //all are open ended type for testing purposes
+
+        foreach (Question q in Questions)
+        {
+            ts.SendQuestion(Questions, _tempsurveyID, q.QuestionText, q.QuestionType);
+        }
+
+
+
+
     }
 
 }

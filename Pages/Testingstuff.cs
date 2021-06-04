@@ -32,9 +32,8 @@ namespace SurveyWebsite.Pages
 
         }
 
-        public void SendQuestion(int surveyid, string questiontext, int questiontype)
+        public void SendQuestion(Question[] q, int surveyid, string questiontext, int questiontype)
         {
-            Question[] q;
             int _surveyID = surveyid;
             int _questiontype;
             string _questiontext;
@@ -57,12 +56,32 @@ namespace SurveyWebsite.Pages
                     _questiontype = 2;
                     _questiontext = questiontext;
                     //execute addmutiplequestion
+                    q = _context.Questions
+                        .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
+                        _surveyID, _questiontext, _questiontype)
+                        .ToArray();
+
                     break;
                 case 3:
                     //multiple choice question type being submitted
                     _questiontype = 3;
                     _questiontext = questiontext;
+                    string option1 = "yes";
+                    string option2 = "maybe";
+                    string option3 = "no";
+                    int _questionID = 555555;
                     //execute addmutiplequestion
+                    q = _context.Questions
+                        .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
+                        _surveyID, _questiontext, _questiontype)
+                        .ToArray();
+                    //get generated questionID, use to add the given multiple choice answer options?
+                    _context.MutipleChoiceTexts.FromSqlRaw("EXECUTE AddMutipleQuestion @questionID, @answerText",
+                        _questionID, option1);
+                    _context.MutipleChoiceTexts.FromSqlRaw("EXECUTE AddMutipleQuestion @questionID, @answerText",
+                        _questionID, option2);
+                    _context.MutipleChoiceTexts.FromSqlRaw("EXECUTE AddMutipleQuestion @questionID, @answerText",
+                        _questionID, option3);
                     break;
             }
         }

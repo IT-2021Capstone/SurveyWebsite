@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class AspNetUserLogin
+    public partial class AspNetUserLogin1
     {
         public string LoginProvider { get; set; }
         public string ProviderKey { get; set; }

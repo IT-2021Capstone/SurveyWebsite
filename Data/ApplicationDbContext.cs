@@ -18,12 +18,12 @@ namespace SurveyWebsite.Data
         {
         }
         //public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-        //public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-        // public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+       // public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+        //public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-        //public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
-        //public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUserLogins1> AspNetUserLogins1s { get; set; }
+        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+        public virtual DbSet<AspNetUserLogins> AspNetUserLoginss { get; set; }
         public virtual DbSet<MutipleAnswerQoftheDay> MutipleAnswerQoftheDays { get; set; }
         public virtual DbSet<MutipleChoiceResponse> MutipleChoiceResponses { get; set; }
         public virtual DbSet<MutipleChoiceText> MutipleChoiceTexts { get; set; }
@@ -52,13 +52,14 @@ namespace SurveyWebsite.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Ignore<IdentityUserLogin<string>>();
+
+              modelBuilder.Ignore<IdentityUserLogin<string>>();
             modelBuilder.Ignore<IdentityUserRole<string>>();
-            modelBuilder.Ignore<IdentityUserClaim<string>>();
+           // modelBuilder.Ignore<IdentityUserClaim<string>>();
             modelBuilder.Ignore<IdentityUserToken<string>>();
             modelBuilder.Ignore<IdentityUser<string>>();
-
-
+            modelBuilder.Ignore<IdentityRole<string>>();
+            // modelBuilder.Entity<IdentityUserRole<Guid>>().HasKey(p => new { p.UserId, p.RoleId });
             //modelBuilder.Entity<AspNetRole>(entity =>
             //{
             //    entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
@@ -109,7 +110,7 @@ namespace SurveyWebsite.Data
             //        .HasForeignKey(d => d.UserId);
             //});
 
-            modelBuilder.Entity<AspNetUserLogins1>(entity =>
+            modelBuilder.Entity<AspNetUserLogins>(entity =>
             {
                 entity.HasKey(e => new { e.LoginProvider, e.ProviderKey })
                     .HasName("PK_AspNetUserLogins");
@@ -130,33 +131,33 @@ namespace SurveyWebsite.Data
                     .HasConstraintName("FK_AspNetUserLogins_AspNetUsers_UserId");
             });
 
-            //modelBuilder.Entity<AspNetUserRole>(entity =>
-            //{
-            //    entity.HasKey(e => new { e.UserId, e.RoleId });
+            modelBuilder.Entity<AspNetUserRole>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.RoleId });
 
-            //    entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
+                entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
 
-            //    entity.HasOne(d => d.Role)
-            //        .WithMany(p => p.AspNetUserRoles)
-            //        .HasForeignKey(d => d.RoleId);
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.RoleId);
 
-            //    entity.HasOne(d => d.User)
-            //        .WithMany(p => p.AspNetUserRoles)
-            //        .HasForeignKey(d => d.UserId);
-            //});
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserRoles)
+                    .HasForeignKey(d => d.UserId);
+            });
 
-            //modelBuilder.Entity<AspNetUserToken>(entity =>
-            //{
-            //    entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+            modelBuilder.Entity<AspNetUserToken>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
 
-            //    entity.Property(e => e.LoginProvider).HasMaxLength(128);
+                entity.Property(e => e.LoginProvider).HasMaxLength(128);
 
-            //    entity.Property(e => e.Name).HasMaxLength(128);
+                entity.Property(e => e.Name).HasMaxLength(128);
 
-            //    entity.HasOne(d => d.User)
-            //        .WithMany(p => p.AspNetUserTokens)
-            //        .HasForeignKey(d => d.UserId);
-            //});
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.AspNetUserTokens)
+                    .HasForeignKey(d => d.UserId);
+            });
 
             modelBuilder.Entity<MutipleAnswerQoftheDay>(entity =>
             {

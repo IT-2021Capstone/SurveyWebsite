@@ -10,7 +10,9 @@ namespace DataAccess.Models
         public AspNetUser()
         {
             AspNetUserClaims = new HashSet<AspNetUserClaim>();
-            AspNetUserLogins = new HashSet<AspNetUserLogin1>();
+            AspNetUserLogins1s = new HashSet<AspNetUserLogins1>();
+            AspNetUserRoles = new HashSet<AspNetUserRole>();
+            AspNetUserTokens = new HashSet<AspNetUserToken>();
             SurveyTakens = new HashSet<SurveyTaken>();
             Surveylists = new HashSet<Surveylist>();
         }
@@ -32,7 +34,9 @@ namespace DataAccess.Models
         public int AccessFailedCount { get; set; }
 
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
-        public virtual ICollection<AspNetUserLogin1> AspNetUserLogins { get; set; }
+        public virtual ICollection<AspNetUserLogins1> AspNetUserLogins1s { get; set; }
+        public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; }
+        public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual ICollection<SurveyTaken> SurveyTakens { get; set; }
         public virtual ICollection<Surveylist> Surveylists { get; set; }
     }

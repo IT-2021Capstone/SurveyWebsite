@@ -9,6 +9,7 @@ namespace DataAccess.Models
     {
         public QuestionOfTheDay()
         {
+            MutipleAnswerQoftheDays = new HashSet<MutipleAnswerQoftheDay>();
             QuestionOfTheDayResponses = new HashSet<QuestionOfTheDayResponse>();
         }
 
@@ -17,6 +18,7 @@ namespace DataAccess.Models
         public DateTime? DateStarted { get; set; }
         public DateTime? DateEnded { get; set; }
 
+        public virtual ICollection<MutipleAnswerQoftheDay> MutipleAnswerQoftheDays { get; set; }
         public virtual ICollection<QuestionOfTheDayResponse> QuestionOfTheDayResponses { get; set; }
     }
 }

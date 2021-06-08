@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace SurveyWebsite.Pages
 {
-    public class Testingstuff
+    public class AddQuestionMethods
     {
         private readonly ApplicationDbContext _context;
-        public Testingstuff(ApplicationDbContext context)
+        public AddQuestionMethods(ApplicationDbContext context)
         {
             _context = context;
         }

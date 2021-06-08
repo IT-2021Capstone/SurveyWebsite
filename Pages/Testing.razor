@@ -2,8 +2,8 @@
 @using DataAccess.Models
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
-@inject Testingstuff ts
-@inherits OwningComponentBase<Testingstuff>
+@inject AddQuestionMethods questionmethods
+@inherits OwningComponentBase<AddQuestionMethods>
 
 
 <h3>Testing</h3>
@@ -38,8 +38,10 @@
 
         foreach (Question q in Questions)
         {
-            ts.SendQuestion(Questions, _tempsurveyID, q.QuestionText, q.QuestionType);
+            questionmethods.SendQuestion(Questions, _tempsurveyID, q.QuestionText, q.QuestionType);
         }
+        //when used on survey maker page, just make each question added go through a loop to be added to the same surveyID
+        //variables like question text will be filled with what is entered into the text box, question type will take from the drop down types
 
 
 

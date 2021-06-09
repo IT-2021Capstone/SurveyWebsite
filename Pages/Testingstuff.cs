@@ -56,16 +56,19 @@ namespace SurveyWebsite.Pages
             return _context.OpenEndedResponses.Where(s => s.QuestionId == qid).Select(s => s.OpenUserResponse).ToArray();
         }
 
+        // answers for people to choose from
         public string[] GetMutipleAnswerText(int qid)
         {
             return _context.MutipleChoiceTexts.Where(s => s.QuestionId == qid).Select(s => s.AnswerText).ToArray();
         }
 
-        public string QuestionOfTheDayText(int qid) 
+        // QuestionOfTheDayText working on HomeAfterLogin page
+        public string QuestionOfTheDayText(int qid)
         {
-            return _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfDayText).ToString();
+            return _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfDayText).First().ToString();
         }
 
+        // this is answers for anyone to see
         public int[] GetDayResponseMutipleAnswers(int qid, int TAnswers)
         {
             int tAnswers = TAnswers;
@@ -81,17 +84,19 @@ namespace SurveyWebsite.Pages
             return answerNum;
         }
 
+        // Admin seeing answers
         public string[] GetDayOpenResponse(int qid)
         {
             return _context.QuestionOfTheDayResponses.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfTheDayOpenResponse).ToArray();
         }
 
+        // get question, this is the answers
         public string[] GetMutipleAnswerTextDay(int qid)
         {
             return _context.MutipleAnswerQoftheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.DayAnswerText).ToArray();
         }
 
-
+        // adding a question to the database
         public void SendQuestion(int id, string text, int qtype )
         {
             Question[] q;
@@ -106,6 +111,7 @@ namespace SurveyWebsite.Pages
                 .ToArray();
         }
 
+        // send user response of multiple choice question to databse
         public void SendMutipleResponse(int Qid,  int userInt)
         {
             MutipleChoiceResponse[] mcr;          
@@ -119,6 +125,7 @@ namespace SurveyWebsite.Pages
                 .ToArray();
         }
 
+        // send user answer of true/false question to the database
         public void SendTrueFalseResponse(int Qid, int userInt)
         {
             TrueFalseResponse[] mcr;
@@ -132,6 +139,8 @@ namespace SurveyWebsite.Pages
                 .ToArray();
         }
 
+        // Working on this for HomeAfterLogin page
+        // send user response for multiple choice question to database for QotD
         public void SendDayMutipleResponse(int Qid, int userInt)
         {
 
@@ -146,6 +155,8 @@ namespace SurveyWebsite.Pages
 
         }
 
+        // Working on this for HomeAfterLogin page
+        // send user response for text answer question to database for QotD
         public void SendDayOpeneded(int Qid, string userString)
         {
             QuestionOfTheDayResponse[] qotdr;
@@ -159,6 +170,8 @@ namespace SurveyWebsite.Pages
                 .ToArray();
 
         }
+        
+        // not sure what this does
         public void UpdateQuestionText(int Qid, string userString)
         {
             QuestionOfTheDayResponse[] qotdr;

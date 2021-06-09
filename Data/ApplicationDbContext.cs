@@ -18,25 +18,25 @@ namespace SurveyWebsite.Data
         {
         }
         //public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-       // public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+        // public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
         //public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-        public virtual DbSet<AspNetUserLogins> AspNetUserLoginss { get; set; }
         public virtual DbSet<MutipleAnswerQoftheDay> MutipleAnswerQoftheDays { get; set; }
         public virtual DbSet<MutipleChoiceResponse> MutipleChoiceResponses { get; set; }
         public virtual DbSet<MutipleChoiceText> MutipleChoiceTexts { get; set; }
         public virtual DbSet<OpenEndedResponse> OpenEndedResponses { get; set; }
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<QuestionOfTheDay> QuestionOfTheDays { get; set; }
+        public virtual DbSet<QuestionOfTheDayOpenResponse> QuestionOfTheDayOpenResponses { get; set; }
         public virtual DbSet<QuestionOfTheDayResponse> QuestionOfTheDayResponses { get; set; }
         public virtual DbSet<QuestionType> QuestionTypes { get; set; }
         public virtual DbSet<SurveyOrder> SurveyOrders { get; set; }
         public virtual DbSet<SurveyTaken> SurveyTakens { get; set; }
         public virtual DbSet<Surveylist> Surveylists { get; set; }
         public virtual DbSet<TrueFalseResponse> TrueFalseResponses { get; set; }
-
 
 
 
@@ -53,7 +53,7 @@ namespace SurveyWebsite.Data
         {
             base.OnModelCreating(modelBuilder);
 
-              modelBuilder.Ignore<IdentityUserLogin<string>>();
+            modelBuilder.Ignore<IdentityUserLogin<string>>();
             modelBuilder.Ignore<IdentityUserRole<string>>();
            // modelBuilder.Ignore<IdentityUserClaim<string>>();
             modelBuilder.Ignore<IdentityUserToken<string>>();
@@ -110,12 +110,9 @@ namespace SurveyWebsite.Data
             //        .HasForeignKey(d => d.UserId);
             //});
 
-            modelBuilder.Entity<AspNetUserLogins>(entity =>
+            modelBuilder.Entity<AspNetUserLogin>(entity =>
             {
-                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey })
-                    .HasName("PK_AspNetUserLogins");
-
-                entity.ToTable("AspNetUserLogins1");
+                entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
 
                 entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
 
@@ -126,9 +123,8 @@ namespace SurveyWebsite.Data
                 entity.Property(e => e.UserId).IsRequired();
 
                 entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserLogins1s)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_AspNetUserLogins_AspNetUsers_UserId");
+                    .WithMany(p => p.AspNetUserLogins)
+                    .HasForeignKey(d => d.UserId);
             });
 
             modelBuilder.Entity<AspNetUserRole>(entity =>
@@ -259,6 +255,25 @@ namespace SurveyWebsite.Data
                 entity.Property(e => e.DateEnded).HasColumnType("datetime");
 
                 entity.Property(e => e.DateStarted).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<QuestionOfTheDayOpenResponse>(entity =>
+            {
+                entity.HasKey(e => e.QuestionOfTheDayOpenResponsesId);
+
+                entity.ToTable("QuestionOfTheDayOpenResponse");
+
+                entity.Property(e => e.QuestionOfTheDayOpenResponsesId).HasColumnName("QuestionOfTheDayOpenResponsesID");
+
+                entity.Property(e => e.QuestionOfTheDayId).HasColumnName("QuestionOfTheDayID");
+
+                entity.Property(e => e.QuestionOfTheDayOpenResponse1).HasColumnName("QuestionOfTheDayOpenResponse");
+
+                entity.HasOne(d => d.QuestionOfTheDay)
+                    .WithMany(p => p.QuestionOfTheDayOpenResponses)
+                    .HasForeignKey(d => d.QuestionOfTheDayId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_QuestionOfTheDayOpenResponse_QuestionOfTheDay");
             });
 
             modelBuilder.Entity<QuestionOfTheDayResponse>(entity =>

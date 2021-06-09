@@ -10,7 +10,7 @@ namespace DataAccess.Models
         public AspNetUser()
         {
             AspNetUserClaims = new HashSet<AspNetUserClaim>();
-            AspNetUserLogins1s = new HashSet<AspNetUserLogins>();
+            AspNetUserLogins = new HashSet<AspNetUserLogin>();
             AspNetUserRoles = new HashSet<AspNetUserRole>();
             AspNetUserTokens = new HashSet<AspNetUserToken>();
             SurveyTakens = new HashSet<SurveyTaken>();
@@ -32,9 +32,10 @@ namespace DataAccess.Models
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
+        public int? RoleType { get; set; }
 
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
-        public virtual ICollection<AspNetUserLogins> AspNetUserLogins1s { get; set; }
+        public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
         public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual ICollection<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual ICollection<SurveyTaken> SurveyTakens { get; set; }

@@ -1,35 +1,61 @@
 ﻿@page "/HomeAfterLogin"
-
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@inject Testingstuff ts
+@inherits OwningComponentBase<Testingstuff>
 
 <h3>Welcome to Centralia College Survey Site!</h3>
 <br />
 <h4>Answer the Question of the day!</h4>
 <br />
-<h6> @QOTD </h6>
-<div>
+<h6> @QuestionOfTheDayText(1) </h6>
 
-    @foreach (var Choice in new[] { Answers.Blue, Answers.Green, Answers.Red, Answers.Yellow})
-    {
-        <label>
-            <input type="radio" 
-                   value="@Choice" 
-                   checked="@(Current == Choice)" 
-                   @onchange="@(() => {Current = Choice;})"/> @Choice.ToString()
-        </label>
-    <br />
-    }
-    <button type="submit" @onclick="@toggle"> Submit </button>
+<div>
+    <form name="openResponse" hidden="@HideTextBox">
+        <label>Answer:</label>
+        <input type="text" id="answer" name="answer" size="100" />
+    </form>
+</div>
+
+@*Cannot use SendDayOpeneded due to it being a void and needing it to be an object for onclick method*@
+<div>
+    <button type="submit" @onclick="@toggle" @*@onclick="@SendDayOpeneded(1, "textboxinfo")"*@> Submit </button>
     <br />
     <label hidden="@HideLabel">Answer has been submitted! <br /> Thank you for your participation!</label>
 </div>
+
 @code {
+
+    private readonly ApplicationDbContext _context;
+
     private bool HideLabel { get; set; } = true;
-    private string QOTD = "What is your favorite Color?";
-    enum Answers { Blue, Red, Green, Yellow };
-    Answers Current = Answers.Blue;
+    private bool HideTextBox { get; set; } = true;
 
     private void toggle()
     {
         HideLabel = !HideLabel;
+    }
+
+    public string QuestionOfTheDayText(int qid)
+    {
+        return ts.QuestionOfTheDayText(qid).ToString();
+    }
+
+    public void WhichResponse(int rid)
+    {
+        if(rid == 1)
+        {
+            HideTextBox = !HideTextBox;
+        }
+
+        if(rid == 2)
+        {
+
+        }
+    }
+
+    public void SendDayOpeneded(int rid, string answer)
+    {
+        ts.SendDayOpeneded(rid, answer);
     }
 }

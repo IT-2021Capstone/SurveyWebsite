@@ -5,11 +5,15 @@ using SurveyWebsite.Data;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace SurveyWebsite.Pages
 {
     public class Testingstuff
     {
+
+        
         private readonly ApplicationDbContext _context;
         public Testingstuff(ApplicationDbContext context)
         {
@@ -17,7 +21,8 @@ namespace SurveyWebsite.Pages
         }
 
 
-        public int[] GetResponseMutipleAnswers(int qid, int TAnswers)
+        //get the response for questions with more then 2 responses also has total resposnse for this question
+        public int[] GetUserResponseMutipleAnswers(int qid, int TAnswers)
         {
             int tAnswers = TAnswers;
             var questionID = qid;
@@ -32,44 +37,8 @@ namespace SurveyWebsite.Pages
             
             return answerNum;
         }
-
-        public int[] TrueFalseResponses(int qid) 
-        {
-
-            var questionID = qid;
-            int[] answerNum = new int[3];
-            answerNum[0] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 1).Select(s => s.TrueFalseUserResponse).Count();
-            answerNum[1] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 2).Select(s => s.TrueFalseUserResponse).Count();
-            answerNum[2] = answerNum[0] + answerNum[1];
-            
-            return answerNum;
-        }
-
-        public string GetText(int qid)
-        {
-            var questionID = qid;
-            return _context.Questions.Where(s => s.QuestionId == questionID).Select(s => s.QuestionText).FirstOrDefault().ToString();
-        }
-
-        public string[] GetOpenResponse(int qid)
-        {
-            return _context.OpenEndedResponses.Where(s => s.QuestionId == qid).Select(s => s.OpenUserResponse).ToArray();
-        }
-
-        // answers for people to choose from
-        public string[] GetMutipleAnswerText(int qid)
-        {
-            return _context.MutipleChoiceTexts.Where(s => s.QuestionId == qid).Select(s => s.AnswerText).ToArray();
-        }
-
-        // QuestionOfTheDayText working on HomeAfterLogin page
-        public string QuestionOfTheDayText(int qid)
-        {
-            return _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfDayText).First().ToString();
-        }
-
-        // this is answers for anyone to see
-        public int[] GetDayResponseMutipleAnswers(int qid, int TAnswers)
+        //same as above but for question of the day
+        public int[] GetUserResponseMutipleAnswersQotD(int qid, int TAnswers)
         {
             int tAnswers = TAnswers;
             int total = 0;
@@ -80,23 +49,59 @@ namespace SurveyWebsite.Pages
                 total = total + answerNum[i];
             }
             answerNum[TAnswers] = total;
+
+            return answerNum;
+        }
+        //gets the responses for true or false questions and the total number of responses
+        public int[] GetUserTrueFalseResponses(int qid) 
+        {
+            var questionID = qid;
+            int[] answerNum = new int[3];
+            answerNum[0] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 1).Select(s => s.TrueFalseUserResponse).Count();
+            answerNum[1] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 2).Select(s => s.TrueFalseUserResponse).Count();
+            answerNum[2] = answerNum[0] + answerNum[1];
             
             return answerNum;
         }
-
-        // Admin seeing answers
-        public string[] GetDayOpenResponse(int qid)
+        //gets the responses for an open ended question will retrun as a string array
+        public string[] GetUserResponseOpen(int qid)
+        {
+            return _context.OpenEndedResponses.Where(s => s.QuestionId == qid).Select(s => s.OpenUserResponse).ToArray();
+        }
+        //same as above but for question of the day
+        public string[] GetUserOpenResponseQotD(int qid)
         {
             return _context.QuestionOfTheDayResponses.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfTheDayOpenResponse).ToArray();
         }
 
-        // get question, this is the answers
-        public string[] GetMutipleAnswerTextDay(int qid)
+        //get the words for a question depending on the question ID
+        public string GetQuestionText(int qid)
+        {
+            var questionID = qid;
+            return _context.Questions.Where(s => s.QuestionId == questionID).Select(s => s.QuestionText).FirstOrDefault().ToString();
+        }
+        //same as above but for question of the day
+        public string GetQuestionTextQotD(int qid)
+        {
+            return _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfDayText).First().ToString();
+        }
+
+        //gets the choices a user can select for a question that has more then one answer
+        public string[] GetAnswerText(int qid)
+        {
+            return _context.MutipleChoiceTexts.Where(s => s.QuestionId == qid).Select(s => s.AnswerText).ToArray();
+        }
+
+        //same as above but for question of the day
+        public string[] GetAnswerTextQotD(int qid)
         {
             return _context.MutipleAnswerQoftheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.DayAnswerText).ToArray();
         }
 
         // adding a question to the database
+
+        //adds a question to a survey in the database 
+
         public void SendQuestion(int id, string text, int qtype )
         {
             Question[] q;
@@ -111,21 +116,7 @@ namespace SurveyWebsite.Pages
                 .ToArray();
         }
 
-        // send user response of multiple choice question to databse
-        public void SendMutipleResponse(int Qid,  int userInt)
-        {
-            MutipleChoiceResponse[] mcr;          
-            int userAnswer = userInt;
-            int QuestionID = Qid;
-            SqlParameter param1 = new SqlParameter("@userAnwer", userAnswer);
-            SqlParameter param2 = new SqlParameter("@questionID", QuestionID);
-
-            mcr = _context.MutipleChoiceResponses
-                .FromSqlRaw("EXECUTE AddMutiplequestionResponse @userAnwer, @questionID", param1, param2)
-                .ToArray();
-        }
-
-        // send user answer of true/false question to the database
+        //sends user answer to a true of false question
         public void SendTrueFalseResponse(int Qid, int userInt)
         {
             TrueFalseResponse[] mcr;
@@ -139,9 +130,24 @@ namespace SurveyWebsite.Pages
                 .ToArray();
         }
 
-        // Working on this for HomeAfterLogin page
-        // send user response for multiple choice question to database for QotD
-        public void SendDayMutipleResponse(int Qid, int userInt)
+        // sends a user response to a question with more then one answer
+        public void SendMutipleResponse(int Qid,  int userInt)
+        {
+            MutipleChoiceResponse[] mcr;          
+            int userAnswer = userInt;
+            int QuestionID = Qid;
+            SqlParameter param1 = new SqlParameter("@userAnwer", userAnswer);
+            SqlParameter param2 = new SqlParameter("@questionID", QuestionID);
+
+            mcr = _context.MutipleChoiceResponses
+                .FromSqlRaw("EXECUTE AddMutiplequestionResponse @userAnwer, @questionID", param1, param2)
+                .ToArray();
+        }
+
+
+
+        //same as above but for question of the day
+        public void SendMutipleResponseQotD(int Qid, int userInt)
         {
 
             QuestionOfTheDayResponse[] qotdr;
@@ -154,10 +160,23 @@ namespace SurveyWebsite.Pages
                 .ToArray();
 
         }
+        //sends a user response to a open ended question
+        public void SendOpenededResponse(int Qid, string userString)
+        {
+            QuestionOfTheDayResponse[] qotdr;
+            int QuestionID = Qid;
+            string userAnswer = userString;
+            SqlParameter param1 = new SqlParameter("@userAnwer", userAnswer);
+            SqlParameter param2 = new SqlParameter("@questionID", QuestionID);
+            qotdr = _context.QuestionOfTheDayResponses
+                .FromSqlRaw("EXECUTE AddOpenEndedResponse @userAnwer, @questionID ", param1, param2)
+                .ToArray();
+
 
         // Working on this for HomeAfterLogin page
-        // send user response for text answer question to database for QotD
-        public void SendDayOpeneded(int Qid, string userString)
+        }
+        //same as above but for question of the day
+        public void SendOpenededResponseQotD(int Qid, string userString)
         {
             QuestionOfTheDayResponse[] qotdr;
             int QuestionID = Qid;
@@ -170,8 +189,8 @@ namespace SurveyWebsite.Pages
                 .ToArray();
 
         }
-        
-        // not sure what this does
+
+        //will update a the text of a question
         public void UpdateQuestionText(int Qid, string userString)
         {
             QuestionOfTheDayResponse[] qotdr;

@@ -1,6 +1,8 @@
 ﻿@page "/Testing"
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
+@using System.Security.Claims
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff ts
 @inherits OwningComponentBase<Testingstuff>
 
@@ -11,13 +13,19 @@
 @code {
 
 
+    private string user = "";
 
+    protected override void OnInitialized()
+    {
+        //to get user Id out depending on who is logged in
+        //user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+        base.OnInitialized();
+    }
     public void questionAdd()
     {
 
-        int[] myint = ts.TrueFalseResponses(5);
-        int[] mymutiple = ts.GetResponseMutipleAnswers(4,3);
-        string[] openresponse = ts.GetOpenResponse(6);
+
         var a = 0;
     }
 

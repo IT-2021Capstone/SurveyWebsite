@@ -70,6 +70,7 @@ namespace SurveyWebsite.Pages
         {
             return _context.QuestionOfTheDayOpenResponses.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfTheDayOpenResponse1).ToArray();
         }
+
         //get the words for a question depending on the question ID
         public string GetQuestionText(int qid)
         {
@@ -81,11 +82,13 @@ namespace SurveyWebsite.Pages
         {
             return _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfDayText).First().ToString();
         }
-        //gets the answers a user can select for a question that has more then one answer
+
+        //gets the choices a user can select for a question that has more then one answer
         public string[] GetAnswerText(int qid)
         {
             return _context.MutipleChoiceTexts.Where(s => s.QuestionId == qid).Select(s => s.AnswerText).ToArray();
         }
+
         //same as above but for question of the day
         public string[] GetAnswerTextQotD(int qid)
         {
@@ -113,7 +116,10 @@ namespace SurveyWebsite.Pages
             return qid;
         }
 
+        // adding a question to the database
+
         //adds a question to a survey in the database 
+
         public int SendQuestion(int id, string text, int qtype )
         {
             Question[] q;
@@ -145,6 +151,7 @@ namespace SurveyWebsite.Pages
                 .ToArray();
             return LastQuestionAddedId();
         }
+
         //sends user answer to a true of false question
         public void SendTrueFalseResponse(int Qid, int userInt)
         {
@@ -158,6 +165,7 @@ namespace SurveyWebsite.Pages
                 .FromSqlRaw("EXECUTE AddTrueFalseResponse @userAnwer, @questionID", param1, param2)
                 .ToArray();
         }
+
         // sends a user response to a question with more then one answer
         public void SendMutipleResponse(int Qid,  int userInt)
         {
@@ -171,6 +179,9 @@ namespace SurveyWebsite.Pages
                 .FromSqlRaw("EXECUTE AddMutiplequestionResponse @userAnwer, @questionID", param1, param2)
                 .ToArray();
         }
+
+
+
         //same as above but for question of the day
         public void SendMutipleResponseQotD(int Qid, int userInt)
         {            
@@ -207,6 +218,7 @@ namespace SurveyWebsite.Pages
                 .ToArray();
 
         }
+
         //will update a the text of a question
         public void UpdateQuestionText(int Qid, string userString)
         {            

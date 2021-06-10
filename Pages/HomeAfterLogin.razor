@@ -38,7 +38,7 @@
 
     public string QuestionOfTheDayText(int qid)
     {
-        return ts.QuestionOfTheDayText(qid).ToString();
+        return ts.GetQuestionTextQotD(qid).ToString();
     }
 
     public void WhichResponse(int rid)
@@ -56,6 +56,6 @@
 
     public void SendDayOpeneded(int rid, string answer)
     {
-        ts.SendDayOpeneded(rid, answer);
+        ts.SendOpenededResponse(rid, answer);
     }
 }

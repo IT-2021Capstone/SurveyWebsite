@@ -5,11 +5,11 @@ using System.Collections.Generic;
 
 namespace DataAccess.Models
 {
-    public partial class QuestionOfTheDayResponse
+    public partial class QuestionOfTheDayOpenResponse
     {
-        public int QuestionOfTheDayResoponseId { get; set; }
+        public int QuestionOfTheDayOpenResponsesId { get; set; }
         public int QuestionOfTheDayId { get; set; }
-        public int? QuestionOfTheDayMutipleResponse { get; set; }
+        public string QuestionOfTheDayOpenResponse1 { get; set; }
 
         public virtual QuestionOfTheDay QuestionOfTheDay { get; set; }
     }

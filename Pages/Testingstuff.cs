@@ -33,8 +33,7 @@ namespace SurveyWebsite.Pages
                 answerNum[i] = _context.MutipleChoiceResponses.Where(s => s.QuestionId == questionID && s.MutipleChoiceUserResponse == i+1).Select(s => s.MutipleChoiceUserResponse).Count();
                 total = total + answerNum[i];
             }
-            answerNum[TAnswers] = total;
-            
+            answerNum[TAnswers] = total;          
             return answerNum;
         }
         //same as above but for question of the day
@@ -49,7 +48,6 @@ namespace SurveyWebsite.Pages
                 total = total + answerNum[i];
             }
             answerNum[TAnswers] = total;
-
             return answerNum;
         }
         //gets the responses for true or false questions and the total number of responses
@@ -59,8 +57,7 @@ namespace SurveyWebsite.Pages
             int[] answerNum = new int[3];
             answerNum[0] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 1).Select(s => s.TrueFalseUserResponse).Count();
             answerNum[1] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 2).Select(s => s.TrueFalseUserResponse).Count();
-            answerNum[2] = answerNum[0] + answerNum[1];
-            
+            answerNum[2] = answerNum[0] + answerNum[1];            
             return answerNum;
         }
         //gets the responses for an open ended question will retrun as a string array
@@ -71,7 +68,7 @@ namespace SurveyWebsite.Pages
         //same as above but for question of the day
         public string[] GetUserOpenResponseQotD(int qid)
         {
-            return _context.QuestionOfTheDayResponses.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfTheDayOpenResponse).ToArray();
+            return _context.QuestionOfTheDayOpenResponses.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfTheDayOpenResponse1).ToArray();
         }
 
         //get the words for a question depending on the question ID
@@ -97,12 +94,33 @@ namespace SurveyWebsite.Pages
         {
             return _context.MutipleAnswerQoftheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.DayAnswerText).ToArray();
         }
+        //checks if the question is required to be answered for use in surevys
+        public bool IsRequredAnswer(int qid) 
+        {
+            var required = _context.Questions.Where(q => q.QuestionId == qid).Select(r => r.IsRequired).First();
+            
+            return (bool)required;
+        }
+
+        // will get user role once I have it set up used to see who can create surveys
+        //public int GetUserRole(string role)
+        //{
+        //    int roletype = (Int32)_context.AspNetUserRoles.Where(u => u.RoleId == role).Select(r => r.RoleType).FirstOrDefault();
+        //    return roletype;
+        //}
+
+        //gets the most recent question added
+        private int LastQuestionAddedId()
+        {
+            int qid = _context.Questions.OrderByDescending(q =>q.QuestionId).FirstOrDefault().QuestionId;
+            return qid;
+        }
 
         // adding a question to the database
 
         //adds a question to a survey in the database 
 
-        public void SendQuestion(int id, string text, int qtype )
+        public int SendQuestion(int id, string text, int qtype )
         {
             Question[] q;
             var surveyID = id;
@@ -114,6 +132,24 @@ namespace SurveyWebsite.Pages
             q = _context.Questions
                 .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType", param1, param2, param3)
                 .ToArray();
+            return LastQuestionAddedId();
+        }
+
+        public int SendQuestion(int id, string text, int qtype, bool required)
+        {
+            Question[] q;
+            var surveyID = id;
+            var questionText = text;
+            var questionType = qtype;
+            var questionReqired = required;
+            SqlParameter param1 = new SqlParameter("@surveyID", surveyID);
+            SqlParameter param2 = new SqlParameter("@questionText", questionText);
+            SqlParameter param3 = new SqlParameter("@questionType", questionType);
+            SqlParameter param4 = new SqlParameter("@reqired ", questionReqired);
+            q = _context.Questions
+                .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType, @reqired ", param1, param2, param3, param4)
+                .ToArray();
+            return LastQuestionAddedId();
         }
 
         //sends user answer to a true of false question
@@ -148,43 +184,36 @@ namespace SurveyWebsite.Pages
 
         //same as above but for question of the day
         public void SendMutipleResponseQotD(int Qid, int userInt)
-        {
-
-            QuestionOfTheDayResponse[] qotdr;
+        {            
             int QuestionID = Qid;
             int userAnswer = userInt;
             SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
             SqlParameter param2 = new SqlParameter("@questionMutiResponse", userAnswer);
-            qotdr = _context.QuestionOfTheDayResponses
+             var send =  _context.QuestionOfTheDayResponses
                 .FromSqlRaw("EXECUTE AddQuestionOfTheDayMutiResponse @questionID, @questionMutiResponse", param1, param2)
                 .ToArray();
-
         }
         //sends a user response to a open ended question
         public void SendOpenededResponse(int Qid, string userString)
         {
-            QuestionOfTheDayResponse[] qotdr;
+            
             int QuestionID = Qid;
             string userAnswer = userString;
             SqlParameter param1 = new SqlParameter("@userAnwer", userAnswer);
             SqlParameter param2 = new SqlParameter("@questionID", QuestionID);
-            qotdr = _context.QuestionOfTheDayResponses
+            var qotdr = _context.OpenEndedResponses
                 .FromSqlRaw("EXECUTE AddOpenEndedResponse @userAnwer, @questionID ", param1, param2)
                 .ToArray();
-
-
-        // Working on this for HomeAfterLogin page
         }
         //same as above but for question of the day
         public void SendOpenededResponseQotD(int Qid, string userString)
-        {
-            QuestionOfTheDayResponse[] qotdr;
+        {       
             int QuestionID = Qid;
             string userAnswer = userString;
             SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
             SqlParameter param2 = new SqlParameter("@questionOpenResponse", userAnswer);
 
-            qotdr = _context.QuestionOfTheDayResponses
+           var qotdr = _context.QuestionOfTheDayOpenResponses
                 .FromSqlRaw("EXECUTE AddQuestionOfTheDayOpenResponse @questionID, @questionOpenResponse", param1, param2)
                 .ToArray();
 
@@ -192,19 +221,69 @@ namespace SurveyWebsite.Pages
 
         //will update a the text of a question
         public void UpdateQuestionText(int Qid, string userString)
-        {
-            QuestionOfTheDayResponse[] qotdr;
+        {            
             int QuestionID = Qid;
             string userAnswer = userString;
             SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
             SqlParameter param2 = new SqlParameter("@questionText", userAnswer);
 
-            qotdr = _context.QuestionOfTheDayResponses
+           var qotdr = _context.Questions
                 .FromSqlRaw("EXECUTE UpdateQuestionText @questionID, @questionText", param1, param2)
                 .ToArray();
+        }
+        //deletes the question entered
+        public void DeleteQuestion(int Qid) 
+        {       
+            int QuestionID = Qid;
+            SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+
+           var qotdr = _context.Questions
+                .FromSqlRaw("EXECUTE UpdateQuestionText @questionID", param1)
+                .ToArray();
+        }
+        //deletes the survey entered
+        public void DeleteSurvey(int sid)
+        {
+            int surveyID = sid;
+            SqlParameter param1 = new SqlParameter("@surveyID", surveyID);
+
+            var qotdr = _context.Surveylists
+                 .FromSqlRaw("EXECUTE UpdateQuestionText @surveyID", param1)
+                 .ToArray();
+        }
+        //will update the text for mutiple choice questions 
+        public void UpdateMutipleChoiceText(int Qid, string userString)
+        {
+            int QuestionID = Qid;
+            string userAnswer = userString;
+            SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+            SqlParameter param2 = new SqlParameter("@questionText", userAnswer);
+            var qotdr = _context.Questions
+                 .FromSqlRaw("EXECUTE UpdateMutipleAnswerText @questionID, @questionText", param1, param2)
+                 .ToArray();
+        }
+        //will delete answers from mutiple choice questions
+        public void DeleteMutipleChoiceText(int qid)
+        {
+            int surveyID = qid;
+            SqlParameter param1 = new SqlParameter("@questionID", surveyID);
+
+            var qotdr = _context.MutipleChoiceTexts
+                 .FromSqlRaw("EXECUTE deleteMutipleAnswerText @questionID", param1)
+                 .ToArray();
+        }
+        //change the role of a user to give them the ablitily to create surveys
+        public void ChangeUserRole(string uId, int roleType) 
+        {
+            string UserId = uId;
+            int role = roleType;
+            SqlParameter param1 = new SqlParameter("@role", role);
+            SqlParameter param2 = new SqlParameter("@LoginId", UserId);
+            var qotdr = _context.AspNetUserRoles
+                 .FromSqlRaw("EXECUTE ChangeUserRole @role, @LoginId", param1, param2)
+                 .ToArray();
 
         }
-
 
     }
 }

@@ -133,6 +133,8 @@ namespace SurveyWebsite.Data
 
                 entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
 
+                entity.Property(e => e.RoleType).HasColumnType("RoleType");
+
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.AspNetUserRoles)
                     .HasForeignKey(d => d.RoleId);

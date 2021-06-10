@@ -17,16 +17,22 @@
 
     protected override void OnInitialized()
     {
-        //to get user Id out depending on who is logged in
-        //user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated )
+        {
+
+            user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
 
         base.OnInitialized();
     }
     public void questionAdd()
     {
 
+        var t=  ts.IsRequredAnswer(7);
+        var f= ts.IsRequredAnswer(6);
+        var te = 3;
 
-        var a = 0;
     }
 
 }

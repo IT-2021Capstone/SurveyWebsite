@@ -2,16 +2,19 @@
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: rgb(0,0,139);
+    background: radial-gradient(circle, rgba(0,0,139,1) 35%, rgba(0,0,255,1) 90%);
+    color: white;
 }
 
 a, .btn-link {
-    color: #0366d6;
+    color: #ffff33;
 }
 
 .btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    color: darkblue;
+    background-color: #ffff33;
+    border-color: white;
 }
 
 .content {

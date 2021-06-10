@@ -1,0 +1,73 @@
+﻿@page "/Account"
+@inject NavigationManager NavMngr
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SurveyWebsite</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/Account.css" rel="stylesheet" />
+    <link href="SurveyWebsite.styles.css" rel="stylesheet" />
+</head>
+<body>
+    <h1>Account Page</h1>
+    <hr />
+    <div class="row">
+        <div class="flex-column" id="profilesidebar">
+            <img src="" alt="profile" id="profilepic">
+            <h5>Role: </h5>
+            <h5>Surveys Taken: </h5>
+            <h5>Surveys Created: </h5>
+            <h5>Date Profile was Created: </h5>
+        </div>
+        <div class="flex-column">
+            <div class="card-deck">
+                <div class="card mb-4">
+                    @*<img class="card-img-top img-fluid" src="//placehold.it/500x280" alt="Card image cap">*@
+                    <div class="card-block">
+                        <h4 class="card-title">Survey's Taken</h4>
+                        <p class="card-text">
+                            Click this Button to see the Survey's you have taken.<br />
+                            <button class="btn btn-primary" @onclick="TakenRedirect"> Survey's Taken </button>
+                        </p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+                <span></span>
+                <div class="card mb-4">
+                    @*<img class="card-img-top img-fluid" src="//placehold.it/500x280" alt="Card image cap">*@
+                    <div class="card-block">
+                        <h4 class="card-title">Survey's Created</h4>
+                        <p class="card-text">
+                            Click this Button to see your Created Survey's.<br />
+                            <button class="btn btn-primary" @onclick="CreatedRedirect"> Survey's Created </button>
+                        </p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+                <span></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+
+@code {
+
+
+    private void TakenRedirect()
+    {
+        NavMngr.NavigateTo("/Taken");
+    }
+
+    private void CreatedRedirect()
+    {
+        NavMngr.NavigateTo("/Created");
+    }
+}

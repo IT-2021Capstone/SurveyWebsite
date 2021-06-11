@@ -248,18 +248,21 @@ namespace SurveyWebsite.Pages
 
             return LastQuestionAddedId();
         }
-        public void SendSurvey(string userid, DateTime datecreated, int currentorder)
+        public void SendSurvey(string userid, int currentorder)
         {
             Surveylist[] s;
             var uid = userid;
             //use getuser?
-            var date = datecreated;
+            var date = DateTime.Now;
             var ordernum = currentorder;
             SqlParameter param1 = new SqlParameter("@userID", uid);
             SqlParameter param2 = new SqlParameter("@dateCreated", date);
             SqlParameter param3 = new SqlParameter("@currentOrder", ordernum);
 
             //get survey ID and return it?
+            s = _context.Surveylists
+                .FromSqlRaw("EXECUTE AddSurvey @userID,@dateCreated,@currentOrder", param1, param2, param3)
+                .ToArray();
         }
 
         // sends a user response to a question with more then one answer

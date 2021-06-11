@@ -20,7 +20,40 @@ namespace SurveyWebsite.Pages
             _context = context;
         }
 
-
+        //see current list of all surveys on the website that exits
+        public string[] ViewOrder()
+        {
+            int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
+            listOrder = _context.SurveyOrders.Select(e => e.CurrentOrder).ToArray();
+            string[] name = new string[listOrder.Length];
+            foreach (int i in listOrder)
+            {
+                name[i - 1] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.SurveyName).First().ToString();
+            }
+            return name;
+        }
+        //gets list of all surveys created only works if person has created surveys
+        public string[] ViewCreated(string userID)
+        {
+            int[] sids = _context.Surveylists.Where(g => g.UserId == userID).Select(g => g.SurveyId).ToArray();
+            string[] names = new string[_context.Surveylists.Where(g => g.UserId == userID).Select(g => g.SurveyId).Count()];
+            foreach (int s in sids)
+            {
+                names[s] = _context.SurveyOrders.Where(a => a.SurveyId == s).Select(a => a.SurveyName).First().ToString();
+            }
+            return names;
+        }
+        //gets all surveys taken by current user, only works if logged in
+        public string[] ViewTaken(string userID)
+        {
+            int[] sids = _context.SurveyTakens.Where(g => g.LoginId == userID).Select(g => g.SurveyId).ToArray();
+            string[] names = new string[_context.SurveyTakens.Where(g => g.LoginId == userID).Select(g => g.SurveyId).Count()];
+            foreach (int s in sids)
+            {
+                names[s] = _context.SurveyOrders.Where(a => a.SurveyId == s).Select(a => a.SurveyName).First().ToString();
+            }
+            return names;
+        }
         //get the response for questions with more then 2 responses also has total resposnse for this question
         public int[] GetUserResponseMutipleAnswers(int qid, int TAnswers)
         {

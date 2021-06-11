@@ -115,6 +115,33 @@ namespace SurveyWebsite.Pages
             int qid = _context.Questions.OrderByDescending(q => q.QuestionId).FirstOrDefault().QuestionId;
             return qid;
         }
+        //gets the int of the last item in current order to add to create survey or to find the last survey in the list
+        private int GetLastSurvey()
+        {
+            int sid = _context.SurveyOrders.OrderByDescending(q => q.CurrentOrder).FirstOrDefault().CurrentOrder;
+            return sid;
+        }
+        //used to get the most recently added survey
+        private int GetCurrentSurvey()
+        {
+            int sid = _context.Surveylists.OrderByDescending(q => q.SurveyId).FirstOrDefault().SurveyId;
+            return sid;
+        }
+        //used to add a survey to the database for creating surveys.
+        public int AddSurvey(string uId)
+        {
+            string UserId = uId;
+            int currentO = GetLastSurvey() + 1;
+            DateTime now = DateTime.Now;
+
+            SqlParameter param1 = new SqlParameter("@userID", UserId);
+            SqlParameter param2 = new SqlParameter("@dateCreated", now);
+            SqlParameter param3 = new SqlParameter("@currentOrder", currentO);
+            var qotdr = _context.Surveylists
+                 .FromSqlRaw("EXECUTE AddSurvey @userID, @dateCreated, @currentOrder", param1, param2, param3)
+                 .ToList();
+            return GetCurrentSurvey();
+        }
 
         // adding a question to the database
 
@@ -154,7 +181,7 @@ namespace SurveyWebsite.Pages
             }
             return LastQuestionAddedId();
         }
-
+        //adds the option to send a quesiton where an answer is not required
         public int SendQuestion(int id, string text, int qtype, bool required)
         {
             Question[] q;
@@ -277,7 +304,7 @@ namespace SurveyWebsite.Pages
 
             return qid;
         }
-        public void SendSurvey(string userid, int currentorder)
+        public int SendSurvey(string userid, int currentorder)
         {
             Surveylist[] s;
             var uid = userid;
@@ -292,6 +319,7 @@ namespace SurveyWebsite.Pages
             s = _context.Surveylists
                 .FromSqlRaw("EXECUTE AddSurvey @userID,@dateCreated,@currentOrder", param1, param2, param3)
                 .ToArray();
+            return GetCurrentSurvey();
         }
 
         // sends a user response to a question with more then one answer
@@ -359,24 +387,17 @@ namespace SurveyWebsite.Pages
                  .FromSqlRaw("EXECUTE UpdateQuestionText @questionID, @questionText", param1, param2)
                  .ToArray();
         }
-        //deletes the question entered
-        public void DeleteQuestion(int Qid)
+
+        //same as above but for question of the day
+        public void UpdateQuestionTextQotD(int Qid, string userString)
         {
             int QuestionID = Qid;
+            string userAnswer = userString;
             SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+            SqlParameter param2 = new SqlParameter("@questionText", userAnswer);
 
-            var qotdr = _context.Questions
-                 .FromSqlRaw("EXECUTE UpdateQuestionText @questionID", param1)
-                 .ToArray();
-        }
-        //deletes the survey entered
-        public void DeleteSurvey(int sid)
-        {
-            int surveyID = sid;
-            SqlParameter param1 = new SqlParameter("@surveyID", surveyID);
-
-            var qotdr = _context.Surveylists
-                 .FromSqlRaw("EXECUTE UpdateQuestionText @surveyID", param1)
+            var qotdr = _context.QuestionOfTheDays
+                 .FromSqlRaw("EXECUTE UpdateQuestionTextQotD @questionID, @questionText", param1, param2)
                  .ToArray();
         }
         //will update the text for mutiple choice questions 
@@ -386,32 +407,85 @@ namespace SurveyWebsite.Pages
             string userAnswer = userString;
             SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
             SqlParameter param2 = new SqlParameter("@questionText", userAnswer);
-            var qotdr = _context.Questions
+            var qotdr = _context.MutipleChoiceTexts
                  .FromSqlRaw("EXECUTE UpdateMutipleAnswerText @questionID, @questionText", param1, param2)
                  .ToArray();
         }
-        //will delete answers from mutiple choice questions
-        public void DeleteMutipleChoiceText(int qid)
+        //will update the text for mutiple choice questions 
+        public void UpdateMutipleChoiceTextQotD(int Qid, string userString)
         {
-            int surveyID = qid;
-            SqlParameter param1 = new SqlParameter("@questionID", surveyID);
-
-            var qotdr = _context.MutipleChoiceTexts
-                 .FromSqlRaw("EXECUTE deleteMutipleAnswerText @questionID", param1)
+            int QuestionID = Qid;
+            string userAnswer = userString;
+            SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+            SqlParameter param2 = new SqlParameter("@questionText", userAnswer);
+            var qotdr = _context.MutipleAnswerQoftheDays
+                 .FromSqlRaw("EXECUTE UpdateMutipleAnswerTextQotD @questionID, @questionText", param1, param2)
                  .ToArray();
         }
+
+        ////will delete answers from mutiple choice questions
+        //public void DeleteMutipleChoiceText(int qid)
+        //{
+        //    int surveyID = qid;
+        //    SqlParameter param1 = new SqlParameter("@questionID", surveyID);
+
+
+        //    var qotdr = _context.MutipleChoiceTexts
+        //         .FromSqlRaw("EXECUTE deleteMutipleAnswerText @questionID", param1)
+        //         .ToArray();
+        //}
+        ////will delete answers from mutiple choice questions
+        //public void DeleteMutipleChoiceTextQotD(int qid)
+        //{
+        //    int surveyID = qid;
+        //    SqlParameter param1 = new SqlParameter("@questionID", surveyID);
+
+        //    var qotdr = _context.MutipleAnswerQoftheDays
+        //         .FromSqlRaw("EXECUTE deleteMutipleAnswerTextQotD @questionID", param1)
+        //         .ToArray();
+        //}
+        ////deletes the question entered
+        //public void DeleteQuestion(int Qid)
+        //{
+        //    int QuestionID = Qid;
+        //    SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+
+        //    var qotdr = _context.Questions
+        //         .FromSqlRaw("EXECUTE deleteQuestionText @questionID", param1)
+        //         .ToArray();
+        //}
+        ////deletes the question entered
+        //public void DeleteQuestionQotD(int Qid)
+        //{
+        //    int QuestionID = Qid;
+        //    SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+
+        //    var qotdr = _context.QuestionOfTheDays
+        //         .FromSqlRaw("EXECUTE deleteQuestionTextQotD @questionID", param1)
+        //         .ToArray();
+        //}
+
+        ////deletes the survey entered
+        //public void DeleteSurvey(int sid)
+        //{
+        //    int surveyID = sid;
+        //    SqlParameter param1 = new SqlParameter("@surveyID", surveyID);
+
+        //    var qotdr = _context.Surveylists
+        //         .FromSqlRaw("EXECUTE DeleteSurvey @surveyID", param1)
+        //         .ToArray();
+        //}
         //change the role of a user to give them the ablitily to create surveys
-        public void ChangeUserRole(string uId, int roleType)
-        {
-            string UserId = uId;
-            int role = roleType;
-            SqlParameter param1 = new SqlParameter("@role", role);
-            SqlParameter param2 = new SqlParameter("@LoginId", UserId);
-            var qotdr = _context.AspNetUserRoles
-                 .FromSqlRaw("EXECUTE ChangeUserRole @role, @LoginId", param1, param2)
-                 .ToArray();
+        //public void ChangeUserRole(string uId, int roleType)
+        //{
+        //    string UserId = uId;
+        //    int role = roleType;
+        //    SqlParameter param1 = new SqlParameter("@role", role);
+        //    SqlParameter param2 = new SqlParameter("@LoginId", UserId);
+        //    var qotdr = _context.AspNetUserRoles
+        //         .FromSqlRaw("EXECUTE ChangeUserRole @role, @LoginId", param1, param2)
+        //         .ToArray();
 
-        }
-
+        //}
     }
 }

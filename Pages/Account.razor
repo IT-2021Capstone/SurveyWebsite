@@ -1,5 +1,11 @@
 ﻿@page "/Account"
-@inject NavigationManager NavMngr
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@inject AccountCode ac
+@inject NavigationManager NavMangr
+@inherits OwningComponentBase<AccountCode>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,58 +22,87 @@
     <h1>Account Page</h1>
     <hr />
     <div class="row">
-        <div class="flex-column" id="profilesidebar">
+        <div class="flex-column header">
             <img src="" alt="profile" id="profilepic">
             <h5>Role: </h5>
             <h5>Surveys Taken: </h5>
             <h5>Surveys Created: </h5>
             <h5>Date Profile was Created: </h5>
+            <button class="btn btn-primary" @onclick="CurrentSurvey"> Current Survey </button>
         </div>
-        <div class="flex-column">
-            <div class="card-deck">
+        <div class="card-deck">
+            <div class="column">
                 <div class="card mb-4">
-                    @*<img class="card-img-top img-fluid" src="//placehold.it/500x280" alt="Card image cap">*@
                     <div class="card-block">
                         <h4 class="card-title">Survey's Taken</h4>
                         <p class="card-text">
                             Click this Button to see the Survey's you have taken.<br />
                             <button class="btn btn-primary" @onclick="TakenRedirect"> Survey's Taken </button>
                         </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                    </div>
-                </div>
-                <span></span>
-                <div class="card mb-4">
-                    @*<img class="card-img-top img-fluid" src="//placehold.it/500x280" alt="Card image cap">*@
-                    <div class="card-block">
-                        <h4 class="card-title">Survey's Created</h4>
-                        <p class="card-text">
-                            Click this Button to see your Created Survey's.<br />
-                            <button class="btn btn-primary" @onclick="CreatedRedirect"> Survey's Created </button>
-                        </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
                 <span></span>
             </div>
+            <div class="column">
+                <div class="card mb-4">
+                    <div class="card-block">
+                        <h4 class="card-title">Survey's Created</h4>
+                        <p class="card-text">
+                            Click this Button to see your Created Survey's.<br />
+                            @*<button class="btn btn-primary" @onclick="CreatedRedirect"> Survey's Created </button>*@
+                        </p>
+                    </div>
+                </div>
+                <span></span>
+            </div>
+            <div class="column">
+                <div class="card mb-4">
+                    <div class="card-block">
+                        <h4 class="card-title">Survey Order List</h4>
+                        <p class="card-text">
+                            Click this Button to see the Current list of surveys in the queue.<br />
+                            <button class="btn btn-primary" @onclick="OrderRedirect"> Survey List </button>
+                        </p>
+                    </div>
+                </div>
+                <span></span>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Footer</p>
         </div>
     </div>
 </body>
 </html>
 
 
-
-
 @code {
-
-
-    private void TakenRedirect()
+    public void CurrentSurvey()
     {
-        NavMngr.NavigateTo("/Taken");
+        string userID = ac.CurrentSurvey("", DateTime.Now, DateTime.Now);
+        string endtime = ac.CurrentSurvey("", DateTime.Now, DateTime.Now);
+        string starttime = ac.CurrentSurvey("", DateTime.Now, DateTime.Now);
     }
 
-    private void CreatedRedirect()
+    private void OrderRedirect()
     {
-        NavMngr.NavigateTo("/Created");
+        NavMangr.NavigateTo("./Account Pages/OrderList");
+        //ac.ViewOrder();
     }
+
+    public void TakenRedirect()
+    {
+        string userID = ac.ViewTaken("");
+    }
+
+    //private void LoginRediect()
+    //{
+    //    NavMangr.NavigateTo("/Login");
+    //}
+
+    //public void CreatedRedirect()
+    //    {
+    //        string userID = ac.ViewCreated();
+    //    }
 }
+@*//myuserid = "422c9c8e-03a5-4d4a-a2c2-835a3be77a98"*@

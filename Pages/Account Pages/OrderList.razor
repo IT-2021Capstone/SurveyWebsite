@@ -1,0 +1,65 @@
+﻿@page "/OrderList"
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@inject AccountCode ac
+@inherits OwningComponentBase<AccountCode>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SurveyWebsite</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/Account.css" rel="stylesheet" />
+    <link href="SurveyWebsite.styles.css" rel="stylesheet" />
+</head>
+<body>
+    <h1>OrderList</h1>
+    <hr />
+    <div class="row">
+        @foreach (var survey in ViewOrder())
+        {
+            <div class="card mb-4">
+                <div class="card-block">
+                    <h4 class="card-title">@survey.First()</h4>
+                    <p class="card-text">
+                    </p>
+                </div>
+            </div>
+            <span></span><br />
+        }
+
+    </div>
+</body>
+</html>
+
+
+@code {
+    private readonly ApplicationDbContext _context;
+    public OrderList(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    public string[] ViewOrder()
+    {
+        int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
+        listOrder = _context.SurveyOrders.Select(e => e.CurrentOrder).ToArray();
+        string[] name = new string[listOrder.Length];
+        foreach (int i in listOrder)
+        {
+            name[i - 1] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.SurveyName).First().ToString();
+        }
+        return name;
+    }
+    //string[] List = view;
+
+    //public void Order()
+    //{
+    //    ac.ViewOrder();
+    //}
+}

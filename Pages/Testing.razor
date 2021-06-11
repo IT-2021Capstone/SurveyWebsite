@@ -1,24 +1,52 @@
 ﻿@page "/Testing"
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
+@inject AccountCode ac
 @inject Testingstuff ts
 @inherits OwningComponentBase<Testingstuff>
 
 
 <h3>Testing</h3>
-<button class="btn btn-primary" @onclick="questionAdd"> addQuestion </button>
+@*<button class="btn btn-primary" @onclick="ViewOrder"> @ </button>*@
+@foreach (var survey in ViewOrder())
+{
+    <div class="card mb-4">
+        <div class="card-block">
+            <h4 class="card-title">@survey.First()</h4>
+            <p class="card-text">
+            </p>
+        </div>
+    </div>
+    <span></span>
+    <br />
+}
 
 @code {
-
-
-
-    public void questionAdd()
+    private readonly ApplicationDbContext _context;
+    public Testing(ApplicationDbContext context)
     {
-
-        int[] myint = ts.TrueFalseResponses(5);
-        int[] mymutiple = ts.GetResponseMutipleAnswers(4,3);
-        string[] openresponse = ts.GetOpenResponse(6);
-        var a = 0;
+        _context = context;
     }
+
+    public string[] ViewOrder()
+    {
+        int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
+        listOrder = _context.SurveyOrders.Select(e => e.CurrentOrder).ToArray();
+        string[] name = new string[listOrder.Length];
+        foreach (int i in listOrder)
+        {
+            name[i - 1] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.SurveyName).First().ToString();
+        }
+        return name;
+    }
+
+    //public void questionAdd()
+    //{
+
+    //    int[] myint = ts.TrueFalseResponses(5);
+    //    int[] mymutiple = ts.GetResponseMutipleAnswers(4,3);
+    //    string[] openresponse = ts.GetOpenResponse(6);
+    //    var a = 0;
+    //}
 
 }

@@ -244,9 +244,38 @@ namespace SurveyWebsite.Pages
             q = _context.QuestionOfTheDays
                 .FromSqlRaw("EXECUTE AddQuestionOfTheDayID @questiondayId, @questionText,@questionOfDayType", param1, param2, param3)
                 .ToArray();
-            //need to take into account multiple choice QOD!
+            //use Sendmultiplequestionoftheday for multiple choice options
 
             return LastQuestionAddedId();
+        }
+
+        public int SendMultipleQuestionOfTheDay(int questiondayid, string questiondaytext, int questiondaytype, string[] options)
+        {
+            QuestionOfTheDay[] q;
+            var qid = questiondayid;
+            var questionText = questiondaytext;
+            var questionType = questiondaytype;
+            SqlParameter param1 = new SqlParameter("@questiondayId", qid);
+            SqlParameter param2 = new SqlParameter("@questionText", questionText);
+            SqlParameter param3 = new SqlParameter("@questionOfDayType", questionType);
+
+            q = _context.QuestionOfTheDays
+                .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
+                param1, param2, param3)
+                .ToArray();
+
+            MutipleChoiceText[] mc;
+
+            foreach (string o in options)
+            {
+                //loop for each multiple choice option given
+                SqlParameter option = new SqlParameter("@answerText", o);
+                mc = _context.MutipleChoiceTexts.FromSqlRaw("EXECUTE AddMutipleQuestion @questionID, @answerText",
+                    qid, option)
+                    .ToArray();
+            }
+
+            return qid;
         }
         public void SendSurvey(string userid, int currentorder)
         {

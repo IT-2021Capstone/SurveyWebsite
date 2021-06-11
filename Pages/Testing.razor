@@ -37,27 +37,43 @@
         //ts.DeleteQuestionQotD(2);
 
         //works
-        //var b = ts.GetAnswerText(4);
-        //var c = ts.GetAnswerTextQotD(1);
-        //var d = ts.GetQuestionText(4);
-        //var e = ts.GetQuestionTextQotD(1);
-        //var f = ts.GetUserOpenResponseQotD(1);
-        //var g = ts.GetUserResponseMutipleAnswers(4,1);
-        //var h = ts.GetUserResponseMutipleAnswersQotD(1,1);
-        //var i = ts.GetUserResponseOpen(4);
-        //var j = ts.GetUserTrueFalseResponses(4);
-        //var k = ts.IsRequredAnswer(6);
-        //ts.SendMutipleResponse(4,1);
-        //ts.SendMutipleResponseQotD(1,1);
-        //ts.SendOpenededResponse(4,"hello");
-        //ts.SendOpenededResponseQotD(1,"hello");
-        //ts.SendQuestion(1,"words",1);
-        //ts.SendQuestion(1,"not reqired",1,false);
-        //ts.SendTrueFalseResponse(4,1);
-        //ts.UpdateQuestionTextQotD(1,"words for the words master");
-        //ts.UpdateMutipleChoiceTextQotD(3, "text for the text master");
-        //ts.UpdateMutipleChoiceText(4,"here is new text");
-        //ts.UpdateQuestionText(4,"this Is more text");
+
+        var survey = ts.AddSurvey(user, DateTime.Now, DateTime.Today, "genral Survey Name");
+        int qoftopen = ts.SendQuestionOfTheDay("day text", 1, DateTime.Now, DateTime.Today, "testQuestion");
+        string[] arr = { "a", "n", "c" };
+        int open = ts.SendQuestion(survey, "words", 1);
+        int tfr = ts.SendQuestion(survey, "truefalse", 2);
+        int opennr = ts.SendQuestion(survey, "not reqired", 1, false);
+        int tfr2 = ts.SendQuestion(survey, "Required", 2, true);
+        int mut = ts.SendQuestionMultiple(survey, "what you like", 3, arr);
+        int qotdm = ts.SendQuestionMultipleQotD("QuestionotD", 3, DateTime.Now, DateTime.Today, arr, "testQofdM");
+        ts.SendTrueFalseResponse(tfr, 1);
+        ts.SendMutipleResponse(mut, 1);
+        ts.SendMutipleResponseQotD(qotdm, 1);
+        ts.SendOpenededResponse(open, "hello");
+        ts.SendOpenededResponseQotD(qoftopen, "hello");
+
+        ts.SendUserTakenSurvey(user, survey);
+        var l = ts.ViewOrder();
+
+        var m = ts.ViewCreated(user);
+        var n = ts.ViewTaken(user);
+
+        var b = ts.GetAnswerText(mut);
+        var c = ts.GetAnswerTextQotD(qotdm);
+        var d = ts.GetQuestionText(open);
+        var e = ts.GetQuestionTextQotD(qoftopen);
+        var f = ts.GetUserOpenResponseQotD(qoftopen);
+        var g = ts.GetUserResponseMutipleAnswers(mut, 1);
+        var h = ts.GetUserResponseMutipleAnswersQotD(qotdm, 1);
+        var i = ts.GetUserResponseOpen(open);
+        var j = ts.GetUserTrueFalseResponses(tfr);
+        var k = ts.IsRequredAnswer(tfr2);
+        ts.UpdateQuestionTextQotD(qoftopen, "words for the words master");
+        ts.UpdateMutipleChoiceTextQotD(qotdm, "text for the text master");
+        //ts.UpdateMutipleChoiceText(mut, "here is new text");
+        ts.UpdateQuestionText(opennr, "this Is more text");
+        var questions = ts.ViewSurveyQuestions(survey);
 
         var te = 3;
 

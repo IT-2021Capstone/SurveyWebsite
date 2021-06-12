@@ -88,7 +88,7 @@ namespace SurveyWebsite.Pages
         {
             return _context.MutipleChoiceTexts.Where(s => s.QuestionId == qid).Select(s => s.AnswerText).ToArray();
         }
-
+        
         //same as above but for question of the day
         public string[] GetAnswerTextQotD(int qid)
         {
@@ -180,9 +180,10 @@ namespace SurveyWebsite.Pages
                 .ToArray();
         }
 
-
-
         //same as above but for question of the day
+
+        //System.InvalidOperationException 'The required column 'QuestionOfTheDayResoponseID' was not present in the
+        //results of a 'FromSql' operation' error when clicking on the button
         public void SendMutipleResponseQotD(int Qid, int userInt)
         {            
             int QuestionID = Qid;
@@ -193,7 +194,12 @@ namespace SurveyWebsite.Pages
                 .FromSqlRaw("EXECUTE AddQuestionOfTheDayMutiResponse @questionID, @questionMutiResponse", param1, param2)
                 .ToArray();
         }
+
         //sends a user response to a open ended question
+
+        //Microsoft.Data.SqlClient.SqlException 'The INSERT statement conflicted with the FOREIGN KEY constraint
+        //'FK_OpenEndedResponses_Questions1'. The conflict occurred in database 'SurveySite', table 'dbo.Questions',
+        //column 'QuestionID'. The statement has been terminated. error when clicking the button to send data to database
         public void SendOpenededResponse(int Qid, string userString)
         {
             

@@ -11,51 +11,50 @@
 <h6> @QuestionOfTheDayText(1) </h6>
 
 <div>
-    <form name="openResponse" hidden="@HideTextBox">
-        <label>Answer:</label>
-        <input type="text" id="answer" name="answer" size="100" />
-    </form>
-</div>
+    @{ 
+        int x = 0;
+        foreach (string answer in GetAnswerTextQotD(1))
+        {
+        <div>
+            <label>@GetAnswerTextQotD(1)[x]</label>
+            <button class="btn btn-primary" @onclick="() => SendMutipleResponseQotD(1,x)">Choose Me</button>
+        </div>
 
-@*Cannot use SendDayOpeneded due to it being a void and needing it to be an object for onclick method*@
+                x = x + 1;
+            } }
+</div>
+@*Need a way to decide which of these blocks of code, top or bottom, to show based on the type of question that the QotD is.
+    Also need to figure out how to determine which QotD to use. Right now it is hardcoded to be just the first one.*@
 <div>
-    <button type="submit" @onclick="@toggle" @*@onclick="@SendDayOpeneded(1, "textboxinfo")"*@> Submit </button>
-    <br />
-    <label hidden="@HideLabel">Answer has been submitted! <br /> Thank you for your participation!</label>
+    <form>
+        <input type="text" @bind="InputValue" @bind:event="oninput" />
+        <button class="btn btn-primary" @onclick="() => SendOpenededResponse(1, InputValue)">Send Me</button>
+    </form>
 </div>
 
 @code {
 
-    private readonly ApplicationDbContext _context;
-
-    private bool HideLabel { get; set; } = true;
-    private bool HideTextBox { get; set; } = true;
-
-    private void toggle()
-    {
-        HideLabel = !HideLabel;
-    }
+    private string InputValue { get; set; }
 
     public string QuestionOfTheDayText(int qid)
     {
         return ts.GetQuestionTextQotD(qid).ToString();
     }
 
-    public void WhichResponse(int rid)
+    public string[] GetAnswerTextQotD(int qid)
     {
-        if(rid == 1)
-        {
-            HideTextBox = !HideTextBox;
-        }
-
-        if(rid == 2)
-        {
-
-        }
+        return ts.GetAnswerTextQotD(qid);
     }
 
-    public void SendDayOpeneded(int rid, string answer)
+    //html working, getting error when calling ts.SendMultipleResponseQotD, full error in TestingStuff.cs
+    public void SendMutipleResponseQotD(int qid, int userInput)
     {
-        ts.SendOpenededResponse(rid, answer);
+        ts.SendMutipleResponseQotD(qid, userInput);
+    }
+
+    //html working, getting error when calling ts.SendOpenededResponse, full error in TestingStuff.cs
+    public void SendOpenededResponse(int Qid, string userString)
+    {
+        ts.SendOpenededResponse(Qid, userString);
     }
 }

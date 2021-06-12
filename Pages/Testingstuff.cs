@@ -19,7 +19,7 @@ namespace SurveyWebsite.Pages
         {
             _context = context;
         }
-
+        //gets all user
         public int[] ViewSurveyQuestions(int surveyId) 
         {
 
@@ -507,8 +507,6 @@ namespace SurveyWebsite.Pages
         //{
         //    int surveyID = qid;
         //    SqlParameter param1 = new SqlParameter("@questionID", surveyID);
-
-
         //    var qotdr = _context.MutipleChoiceTexts
         //         .FromSqlRaw("EXECUTE deleteMutipleAnswerText @questionID", param1)
         //         .ToArray();

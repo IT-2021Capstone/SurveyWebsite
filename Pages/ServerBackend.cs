@@ -12,21 +12,76 @@ namespace SurveyWebsite.Pages
 {
     public class ServerBackend
     {
-
-
         private readonly ApplicationDbContext _context;
+
         public ServerBackend(ApplicationDbContext context)
         {
             _context = context;
         }
-        //gets all user
-        public int[] ViewSurveyQuestions(int surveyId) 
+
+
+        #region survey questions
+        //gets all questions of a survey and question types of a survey 
+        //This is stored in a tuple which holds 3 values the first value will be the question ID
+        //the second value will be the question text and third will be question Type, and last will be is requried.
+        //To use get data you need out use varableName.item1 for questionID
+        //varableName.item2 for question text varableName.item3 for question type
+        //varableName.item4 to check in the question is required
+        //this will be easier then calling a a sepreate method in html stuff
+        public Tuple<int, string, int, bool>[] ViewSurveyQuestions(int surveyId) 
         {
 
-            return _context.Questions.Where(a => a.SurveyId == surveyId).Select(b =>b.QuestionId).ToArray();
+            Tuple<int, string, int, bool>[] surveyQuestionList = new Tuple<int, string, int, bool>[_context.Questions.Where(q => q.SurveyId == surveyId).Count()];
+            int[] questionid = _context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.QuestionId).ToArray();
+            string[] questionText = _context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.QuestionText).ToArray();
+            int[] questiontype = _context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.QuestionType).ToArray();
+            bool[] isRequired =_context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.IsRequired).ToArray();
+            for (int i = 0; i < surveyQuestionList.Length; i++)
+            {
+
+                surveyQuestionList[i] =new Tuple<int, string, int, bool>(questionid[i],questionText[i],questiontype[i], isRequired[i]);
+            }
+            return surveyQuestionList;
         }
 
-        //see current list of all surveys on the website that exits
+        //get the text for mutiple choice questions
+        public string[] ViewMutipleChoice(int qid)
+        {
+            return _context.MutipleChoiceTexts.Where(a => a.QuestionId == qid).Select(b => b.AnswerText).ToArray();        
+        }
+        //same but for question of the day 
+        public string[] ViewMutipleChoiceQotD(int qid)
+        {
+            return _context.MutipleAnswerQoftheDays.Where(a => a.QuestionOfTheDayId == qid).Select(b => b.DayAnswerText).ToArray();
+        }
+
+        #endregion
+
+        #region start and end times
+        //gets start time of a question of the day
+        public DateTime ViewStartTimeQotD(int qid)
+        {          
+            return (DateTime)_context.QuestionOfTheDays.Where(a => a.QuestionOfTheDayId == qid).Select(b => b.DateStarted).First();
+        }
+        //gets the end time for question of the day
+        public DateTime ViewEndTimeQotD(int qid)
+        {
+            return (DateTime)_context.QuestionOfTheDays.Where(a => a.QuestionOfTheDayId == qid).Select(b => b.DateEnded).First();
+        }
+        //gets the start time for a survey used to find if you can take a survey
+        public DateTime ViewStartTime(int surveyId)
+        {
+            return (DateTime)_context.SurveyOrders.Where(a => a.SurveyId == surveyId).Select(b => b.StartTime).First();
+        }
+        //gets the end time for a survey
+        public DateTime ViewEndTime(int surveyId)
+        {
+            return (DateTime)_context.SurveyOrders.Where(a => a.SurveyId == surveyId).Select(b => b.EndTime).First();
+        }
+        #endregion
+
+        #region Account info
+        //see current list of all surveys on the website that exits, current past and furture
         public string[] ViewOrder()
         {
             int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
@@ -38,7 +93,8 @@ namespace SurveyWebsite.Pages
             }
             return name;
         }
-        //gets list of all surveys created only works if person has created surveys
+
+        //gets list of all surveys created only works if person has created surveys and they are logged in
         public string[] ViewCreated(string userID)
         {
             int[] sids = _context.Surveylists.Where(g => g.UserId == userID).Select(g => g.SurveyId).ToArray();
@@ -64,6 +120,9 @@ namespace SurveyWebsite.Pages
             }
             return names;
         }
+        #endregion
+
+        #region get user resposnse
         //get the response for questions with more then 2 responses also has total resposnse for this question
         public int[] GetUserResponseMutipleAnswers(int qid, int TAnswers)
         {
@@ -79,6 +138,7 @@ namespace SurveyWebsite.Pages
             answerNum[TAnswers] = total;
             return answerNum;
         }
+
         //same as above but for question of the day
         public int[] GetUserResponseMutipleAnswersQotD(int qid, int TAnswers)
         {
@@ -93,6 +153,7 @@ namespace SurveyWebsite.Pages
             answerNum[TAnswers] = total;
             return answerNum;
         }
+
         //gets the responses for true or false questions and the total number of responses
         public int[] GetUserTrueFalseResponses(int qid)
         {
@@ -103,11 +164,13 @@ namespace SurveyWebsite.Pages
             answerNum[2] = answerNum[0] + answerNum[1];
             return answerNum;
         }
+
         //gets the responses for an open ended question will retrun as a string array
         public string[] GetUserResponseOpen(int qid)
         {
             return _context.OpenEndedResponses.Where(s => s.QuestionId == qid).Select(s => s.OpenUserResponse).ToArray();
         }
+
         //same as above but for question of the day
         public string[] GetUserOpenResponseQotD(int qid)
         {
@@ -120,37 +183,16 @@ namespace SurveyWebsite.Pages
             var questionID = qid;
             return _context.Questions.Where(s => s.QuestionId == questionID).Select(s => s.QuestionText).FirstOrDefault().ToString();
         }
+
         //same as above but for question of the day
         public string GetQuestionTextQotD(int qid)
         {
             return _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.QuestionOfDayText).First().ToString();
         }
 
-        //gets the choices a user can select for a question that has more then one answer
-        public string[] GetAnswerText(int qid)
-        {
-            return _context.MutipleChoiceTexts.Where(s => s.QuestionId == qid).Select(s => s.AnswerText).ToArray();
-        }
+        #endregion
 
-        //same as above but for question of the day
-        public string[] GetAnswerTextQotD(int qid)
-        {
-            return _context.MutipleAnswerQoftheDays.Where(s => s.QuestionOfTheDayId == qid).Select(s => s.DayAnswerText).ToArray();
-        }
-        //checks if the question is required to be answered for use in surevys
-        public bool IsRequredAnswer(int qid)
-        {
-            var required = _context.Questions.Where(q => q.QuestionId == qid).Select(r => r.IsRequired).First();
-
-            return (bool)required;
-        }
-
-        // will get user role once I have it set up used to see who can create surveys
-        //public int GetUserRole(string role)
-        //{
-        //    int roletype = (Int32)_context.AspNetUserRoles.Where(u => u.RoleId == role).Select(r => r.RoleType).FirstOrDefault();
-        //    return roletype;
-        //}
+        #region retrun IDs for creating questions and surveys
 
         //gets the most recent question added
         private int LastQuestionAddedId()
@@ -158,7 +200,8 @@ namespace SurveyWebsite.Pages
             int qid = _context.Questions.OrderByDescending(q => q.QuestionId).FirstOrDefault().QuestionId;
             return qid;
         }
-        private int LastQuestionOfTheDayAddedId()
+        //same as above but for question of the day
+        private int LastQuestionAddedIdQotD()
         {
             int qid = _context.QuestionOfTheDays.OrderByDescending(q => q.QuestionOfTheDayId).FirstOrDefault().QuestionOfTheDayId;
             return qid;
@@ -181,6 +224,10 @@ namespace SurveyWebsite.Pages
             int sid = _context.Surveylists.OrderByDescending(q => q.SurveyId).FirstOrDefault().SurveyId;
             return sid;
         }
+
+        #endregion
+
+        #region add questions and surveys to the database
 
         //first test will update when done
         public int SendQuestion(int id, string text, int qtype)
@@ -267,7 +314,7 @@ namespace SurveyWebsite.Pages
                 .ToArray();
             //use Sendmultiplequestionoftheday for multiple choice options
 
-            int surveyID = LastQuestionOfTheDayAddedId();
+            int surveyID = LastQuestionAddedIdQotD();
             var name = surveyName;
             int currentO = GetLastSurvey() + 1;
             SqlParameter param5 = new SqlParameter("@id", surveyID);
@@ -277,7 +324,7 @@ namespace SurveyWebsite.Pages
             var surveyO = _context.SurveyOrders
             .FromSqlRaw("EXECUTE AddSurveyOrderInfoQotD @id, @quetionStart, @questionEnd, @currentO, @nameOfSurvey", param5, param3, param4, param6, param7)
             .ToList();
-            return LastQuestionOfTheDayAddedId();
+            return LastQuestionAddedIdQotD();
         }
 
         public int SendQuestionMultiple(int id, string text, int qtype, string[] options)
@@ -327,7 +374,7 @@ namespace SurveyWebsite.Pages
                 .ToArray();
 
             MutipleAnswerQoftheDay[] mc;
-            int _questionID = LastQuestionOfTheDayAddedId();
+            int _questionID = LastQuestionAddedIdQotD();
             SqlParameter qid = new SqlParameter("@questionID", _questionID);
             foreach (string o in options)
             {
@@ -338,7 +385,7 @@ namespace SurveyWebsite.Pages
                     .ToArray();
             }
 
-            int surveyID = LastQuestionOfTheDayAddedId();
+            int surveyID = LastQuestionAddedIdQotD();
             var name = surveyName;
             int currentO = GetLastSurvey() + 1;
             SqlParameter param5 = new SqlParameter("@id", surveyID);
@@ -381,6 +428,11 @@ namespace SurveyWebsite.Pages
 
             return GetCurrentSurvey();
         }
+
+        #endregion
+
+        #region send user response to database
+
         //need to create proc for this
         public void SendUserTakenSurvey(string userId, int surveyId)
         {
@@ -414,8 +466,6 @@ namespace SurveyWebsite.Pages
                 .FromSqlRaw("EXECUTE AddMutiplequestionResponse @userAnwer, @questionID", param1, param2)
                 .ToArray();
         }
-
-
 
         //same as above but for question of the day
         public void SendMutipleResponseQotD(int Qid, int userInt)
@@ -453,6 +503,10 @@ namespace SurveyWebsite.Pages
                  .ToArray();
 
         }
+
+        #endregion
+
+        #region updates to questions
 
         //will update a the text of a question
         public void UpdateQuestionText(int Qid, string userString)
@@ -502,56 +556,74 @@ namespace SurveyWebsite.Pages
                  .ToArray();
         }
 
-        ////will delete answers from mutiple choice questions
-        //public void DeleteMutipleChoiceText(int qid)
-        //{
-        //    int surveyID = qid;
-        //    SqlParameter param1 = new SqlParameter("@questionID", surveyID);
-        //    var qotdr = _context.MutipleChoiceTexts
-        //         .FromSqlRaw("EXECUTE deleteMutipleAnswerText @questionID", param1)
-        //         .ToArray();
-        //}
-        ////will delete answers from mutiple choice questions
-        //public void DeleteMutipleChoiceTextQotD(int qid)
-        //{
-        //    int surveyID = qid;
-        //    SqlParameter param1 = new SqlParameter("@questionID", surveyID);
+        #endregion
 
-        //    var qotdr = _context.MutipleAnswerQoftheDays
-        //         .FromSqlRaw("EXECUTE deleteMutipleAnswerTextQotD @questionID", param1)
-        //         .ToArray();
-        //}
-        ////deletes the question entered
-        //public void DeleteQuestion(int Qid)
+        #region delete questions and more from the database
+
+        //will delete answers from mutiple choice questions
+        public void DeleteMutipleChoiceText(int qid)
+        {
+            int surveyID = qid;
+            SqlParameter param1 = new SqlParameter("@questionID", surveyID);
+
+            var qotdr = _context.MutipleChoiceTexts
+                 .FromSqlRaw("EXECUTE deleteMutipleAnswerText @questionID", param1)
+                 .ToArray();
+        }
+        //will delete answers from mutiple choice questions
+        public void DeleteMutipleChoiceTextQotD(int qid)
+        {
+            int surveyID = qid;
+            SqlParameter param1 = new SqlParameter("@questionID", surveyID);
+
+            var qotdr = _context.MutipleAnswerQoftheDays
+                 .FromSqlRaw("EXECUTE deleteMutipleAnswerTextQotD @questionID", param1)
+                 .ToArray();
+        }
+        //deletes the question entered
+        public void DeleteQuestion(int Qid)
+        {
+            int QuestionID = Qid;
+            SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+
+            var qotdr = _context.Questions
+                 .FromSqlRaw("EXECUTE deleteQuestionText @questionID", param1)
+                 .ToArray();
+        }
+        //deletes the question entered
+        public void DeleteQuestionQotD(int Qid)
+        {
+            int QuestionID = Qid;
+            SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
+
+            var qotdr = _context.QuestionOfTheDays
+                 .FromSqlRaw("EXECUTE deleteQuestionTextQofD @questionID", param1)
+                 .ToArray();
+        }
+
+        //deletes the survey entered
+        public void DeleteSurvey(int sid)
+        {
+            int surveyID = sid;
+            SqlParameter param1 = new SqlParameter("@surveyID", surveyID);
+
+            var qotdr = _context.Surveylists
+                 .FromSqlRaw("EXECUTE DeleteSurvey @surveyID", param1)
+                 .ToArray();
+        }
+
+        #endregion
+
+
+
+
+        // will get user role once I have it set up used to see who can create surveys
+        //public int GetUserRole(string role)
         //{
-        //    int QuestionID = Qid;
-        //    SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
-
-        //    var qotdr = _context.Questions
-        //         .FromSqlRaw("EXECUTE deleteQuestionText @questionID", param1)
-        //         .ToArray();
-        //}
-        ////deletes the question entered
-        //public void DeleteQuestionQotD(int Qid)
-        //{
-        //    int QuestionID = Qid;
-        //    SqlParameter param1 = new SqlParameter("@questionID", QuestionID);
-
-        //    var qotdr = _context.QuestionOfTheDays
-        //         .FromSqlRaw("EXECUTE deleteQuestionTextQotD @questionID", param1)
-        //         .ToArray();
+        //    int roletype = (Int32)_context.AspNetUserRoles.Where(u => u.RoleId == role).Select(r => r.RoleType).FirstOrDefault();
+        //    return roletype;
         //}
 
-        ////deletes the survey entered
-        //public void DeleteSurvey(int sid)
-        //{
-        //    int surveyID = sid;
-        //    SqlParameter param1 = new SqlParameter("@surveyID", surveyID);
-
-        //    var qotdr = _context.Surveylists
-        //         .FromSqlRaw("EXECUTE DeleteSurvey @surveyID", param1)
-        //         .ToArray();
-        //}
         //change the role of a user to give them the ablitily to create surveys
         //public void ChangeUserRole(string uId, int roleType)
         //{

@@ -28,18 +28,10 @@
     }
     public void questionAdd()
     {
-        //var s = ts.AddSurvey(user);
-        //not working yet
-        //ts.DeleteMutipleChoiceText(4);
-        //ts.DeleteQuestion(4);
-        //ts.DeleteSurvey(2);
-        //ts.DeleteMutipleChoiceTextQotD(4);
-        //ts.DeleteQuestionQotD(2);
 
-        //works
+        
 
         //var survey = ts.AddSurvey(user, DateTime.Now, DateTime.Today, "genral Survey Name");
-        //int qoftopen = ts.SendQuestionOfTheDay("day text", 1, DateTime.Now, DateTime.Today, "testQuestion");
         //string[] arr = { "a", "n", "c" };
         //int open = ts.SendQuestion(survey, "words", 1);
         //int tfr = ts.SendQuestion(survey, "truefalse", 2);
@@ -47,6 +39,19 @@
         //int tfr2 = ts.SendQuestion(survey, "Required", 2, true);
         //int mut = ts.SendQuestionMultiple(survey, "what you like", 3, arr);
         //int qotdm = ts.SendQuestionMultipleQotD("QuestionotD", 3, DateTime.Now, DateTime.Today, arr, "testQofdM");
+        //int qoftopen = ts.SendQuestionOfTheDay("day text", 1, DateTime.Now, DateTime.Today, "testQuestion");
+
+
+        //ts.DeleteQuestion(open);
+
+        //ts.DeleteQuestionQotD(13);
+        //ts.DeleteMutipleChoiceText(mut);
+        //ts.DeleteMutipleChoiceTextQotD(qotdm);
+        //ts.DeleteSurvey(11);
+
+        //write 2 functions to get mutiple choice stuff
+        //works
+
         //ts.SendTrueFalseResponse(tfr, 1);
         //ts.SendMutipleResponse(mut, 1);
         //ts.SendMutipleResponseQotD(qotdm, 1);
@@ -73,9 +78,9 @@
         //ts.UpdateMutipleChoiceTextQotD(qotdm, "text for the text master");
         ////ts.UpdateMutipleChoiceText(mut, "here is new text");
         //ts.UpdateQuestionText(opennr, "this Is more text");
-        //var questions = ts.ViewSurveyQuestions(survey);
+        var questions = ts.ViewSurveyQuestions(13);
 
-        //var te = 3;
+        var te = 3;
 
     }
 

@@ -1,4 +1,22 @@
-﻿h1 {
+﻿
+h1 {
+    text-align: center;
+}
+
+div {
+    background-color: transparent;
+/*    display: flex;
+    flex-wrap: wrap;*/
+}
+
+.card {
+    width: 200px;
+/*    flex: 1 0 33%;*/
+}
+
+.card-title {
+    color: black;
+    background-color: lightgray;
     text-align: center;
 }
 
@@ -9,18 +27,11 @@
 .card-block {
     background-color: lightgray;
     width: 200px;
-    object-fit:cover;
+    object-fit: cover;
 }
 
 .flex-column {
     height: 100%;
-/*    width: 33%;*/
-}
-
-#profilesidebar {
-    width: 100%;
-    display: inline-block;
-    height: 200px;
 }
 
 #profilepic {
@@ -28,7 +39,7 @@
 }
 
 body {
-    background-color: #dee2e6;
+    background-color: transparent;
 }
 
 .card-deck span {
@@ -62,18 +73,3 @@ body {
         width: 100%;
     }
 }
-
-
-/* add css for margin fix -- this will not be needed after beta */
-/*.card-deck .card {
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
-    .card-deck .card:not(:last-child) {
-        margin-right: 15px;
-    }
-
-    .card-deck .card:not(:first-child) {
-        margin-left: 15px;
-    }*/

@@ -86,10 +86,12 @@ namespace SurveyWebsite.Pages
         {
             int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
             listOrder = _context.SurveyOrders.Select(e => e.CurrentOrder).ToArray();
+            int counter = 0;
             string[] name = new string[listOrder.Length];
             foreach (int i in listOrder)
             {
-                name[i - 1] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.SurveyName).First().ToString();
+                name[counter] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.SurveyName).First().ToString();
+                counter++;
             }
             return name;
         }

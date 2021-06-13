@@ -10,11 +10,11 @@ using System.Security.Claims;
 
 namespace SurveyWebsite.Pages
 {
-    public class ServerBackend
+    public class testingstuff
     {
         private readonly ApplicationDbContext _context;
 
-        public ServerBackend(ApplicationDbContext context)
+        public testingstuff(ApplicationDbContext context)
         {
             _context = context;
         }

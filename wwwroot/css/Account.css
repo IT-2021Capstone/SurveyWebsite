@@ -31,6 +31,30 @@ body {
     background-color: #dee2e6;
 }
 
+.button {
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: black;
+    background-color: lightgray;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 9px #004085;
+}
+
+.button:hover {
+    background-color: aliceblue;
+}
+
+.button:active {
+    background-color: aliceblue;
+    box-shadow: 0 5px #004085;
+    transform: translateY(4px);
+}
+
 .card-deck span {
     display: none;
 }

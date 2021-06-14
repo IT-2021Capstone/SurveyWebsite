@@ -28,6 +28,7 @@
             <h5>Role: </h5>
             @*<h5>Survey's Created: </h5>
             <h5>Survey's Taken: </h5>*@
+            <button class="btn btn-primary button" @onclick="OpenCurrentSurvey"> Take Current Survey! </button>
         </div>
     </div>
     <div class="row">
@@ -40,7 +41,6 @@
                             Click this Button to see the Survey's you have taken.<br />
                             <button class="btn btn-primary" @onclick="TakenRedirect"> Survey's Taken </button>
                         </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
                 <span></span>
@@ -51,18 +51,16 @@
                             Click this Button to see your Created Survey's.<br />
                             <button class="btn btn-primary" @onclick="CreatedRedirect"> Survey's Created </button>
                         </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
                 <span></span>
                 <div class="card mb-4">
                     <div class="card-block">
-                        <h4 class="card-title">Survey's Created</h4>
+                        <h4 class="card-title">Survey Order List</h4>
                         <p class="card-text">
                             Click this Button to see the Order of the Surveys currently on the site.<br />
                             <button class="btn btn-primary" @onclick="ViewOrder"> Order of Surveys </button>
                         </p>
-                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
                 <span></span>
@@ -87,7 +85,6 @@
             user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
-
         base.OnInitialized();
     }
 
@@ -105,4 +102,9 @@
     {
         NavMngr.NavigateTo("/OrderList");
     }
+
+    private void OpenCurrentSurvey()
+        {
+            NavMngr.NavigateTo("/CurrentSurvey");
+        }
 }

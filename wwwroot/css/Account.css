@@ -10,6 +10,7 @@
     background-color: lightgray;
     width: 200px;
     object-fit:cover;
+    color: black;
 }
 
 .flex-column {
@@ -29,6 +30,11 @@
 
 body {
     background-color: #dee2e6;
+}
+
+.profbutton{
+    float:right;
+    border-radius: 50px;
 }
 
 .button {

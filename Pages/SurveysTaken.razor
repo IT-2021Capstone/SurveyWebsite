@@ -27,7 +27,7 @@
         {
             <div class="card mb-4">
                 <div class="card-block">
-                    <h4 class="card-title">@survey.ToUpper()</h4>
+                    <h4 class="card-title">@survey.Item1.ToUpper()</h4>
                     <p class="card-text">
                     </p>
                 </div>
@@ -53,7 +53,7 @@
         base.OnInitialized();
     }
 
-    public string[] ViewTaken()
+    public Tuple<string,int>[] ViewTaken()
     {
         //var n = ts.ViewTaken(user);
         return ts.ViewTaken(user);

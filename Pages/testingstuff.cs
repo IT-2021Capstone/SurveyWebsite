@@ -97,22 +97,29 @@ namespace SurveyWebsite.Pages
         }
 
         //gets list of all surveys created only works if person has created surveys and they are logged in
-        public string[] ViewCreated(string userID)
+        public Tuple<string, int>[] ViewCreated(string userID)
         {
+            Tuple<string, int>[] list = new Tuple<string, int>[_context.Surveylists.Where(g => g.UserId == userID).Count()];
             int[] sids = _context.Surveylists.Where(g => g.UserId == userID).Select(g => g.SurveyId).ToArray();
             int counter = 0;
             string[] names = new string[sids.Length];
+
             foreach (int s in sids)
             {
                 names[counter] = _context.SurveyOrders.Where(a => a.SurveyId == s).Select(a => a.SurveyName).First().ToString();
                 counter++;
             }
-            return names;
+            for (int i = 0; i < list.Length; i++)
+            {
+                list[i] = new Tuple<string, int>(names[i], sids[i]);
+            }
+            return list;
         }
         //gets all surveys taken by current user, only works if logged in
-        public string[] ViewTaken(string userID)
+        public Tuple<string, int>[] ViewTaken(string userID)
         {
             int[] sids = _context.SurveyTakens.Where(g => g.LoginId == userID).Select(g => g.SurveyId).ToArray();
+            Tuple<string, int>[] list = new Tuple<string, int>[sids.Length];
             string[] names = new string[sids.Length];
             int counter = 0;
             foreach (int s in sids)
@@ -120,7 +127,11 @@ namespace SurveyWebsite.Pages
                 names[counter] = _context.SurveyOrders.Where(a => a.SurveyId == s).Select(a => a.SurveyName).First().ToString();
                 counter++;
             }
-            return names;
+            for (int i = 0; i < list.Length; i++)
+            {
+                list[i] = new Tuple<string, int>(names[i], sids[i]);
+            }
+            return list;
         }
         #endregion
 

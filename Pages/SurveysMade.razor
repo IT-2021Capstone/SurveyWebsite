@@ -52,7 +52,7 @@
         base.OnInitialized();
     }
 
-    public string[] ViewCreated()
+    public Tuple<string, int>[] ViewCreated()
     {
         return ts.ViewCreated(user);
     }

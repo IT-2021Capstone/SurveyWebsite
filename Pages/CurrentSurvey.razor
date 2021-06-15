@@ -48,7 +48,7 @@
     //    int sid = _context.Surveylists.OrderByDescending(q => q.SurveyId).FirstOrDefault().SurveyId;
     //    return sid;
     //}
-    public string[] ViewTaken()
+    public Tuple<int, string>[] ViewTaken()
     {
         //var n = ts.ViewTaken(user);
         return ts.ViewTaken(user);

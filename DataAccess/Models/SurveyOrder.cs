@@ -9,8 +9,8 @@ namespace DataAccess.Models
     {
         public int? SurveyId { get; set; }
         public int? QuestionOfTheDayId { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
         public int CurrentOrder { get; set; }
         public string SurveyName { get; set; }
 

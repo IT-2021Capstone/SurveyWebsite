@@ -1,10 +1,11 @@
-﻿@page "/SurveysMade"
+﻿@page "/CurrentSurvey"
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff ts
 @inherits OwningComponentBase<Testingstuff>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,20 +20,10 @@
     <link href="SurveyWebsite.styles.css" rel="stylesheet" />
 </head>
 <body>
-    <h1>Survey's Made</h1>
+      <h1>Current Survey</h1>
     <hr />
     <div>
-        @foreach (var survey in ViewCreated())
-        {
-            <div class="card mb-4">
-                <div class="card-block">
-                    <h4 class="card-title">@survey.Item1</h4>
-                    <p class="card-text">
-                    </p>
-                </div>
-            </div>
-            <span></span><br />
-        }
+        
     </div>
 </body>
 </html>
@@ -51,9 +42,15 @@
 
         base.OnInitialized();
     }
-
-    public Tuple<string, int>[] ViewCreated()
+    //used to get the most recently added survey
+    //private int GetCurrentSurvey()
+    //{
+    //    int sid = _context.Surveylists.OrderByDescending(q => q.SurveyId).FirstOrDefault().SurveyId;
+    //    return sid;
+    //}
+    public Tuple<string, int>[] ViewTaken()
     {
-        return ts.ViewCreated(user);
+        //var n = ts.ViewTaken(user);
+        return ts.ViewTaken(user);
     }
 }

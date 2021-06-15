@@ -43,6 +43,20 @@ namespace SurveyWebsite.Pages
             }
             return surveyQuestionList;
         }
+        public Tuple<string, int >[] ViewQuestionsofTheDay(int qId)
+        {
+
+            Tuple<string, int>[] surveyQuestionList = new Tuple<string, int>[_context.Questions.Where(q => q.SurveyId == qId).Count()];
+            string[] questionText = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qId).Select(q => q.QuestionOfDayText).ToArray();
+            int[] questiontype = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qId).Select(q => q.QuestionOfDayType).ToArray();
+            for (int i = 0; i < surveyQuestionList.Length; i++)
+            {
+
+                surveyQuestionList[i] = new Tuple<string, int>(questionText[i], questiontype[i]);
+            }
+            return surveyQuestionList;
+        }
+
 
         //get the text for mutiple choice questions
         public string[] ViewMutipleChoice(int qid)
@@ -82,18 +96,40 @@ namespace SurveyWebsite.Pages
 
         #region Account info
         //see current list of all surveys on the website that exits, current past and furture
-        public string[] ViewOrder()
+        public Tuple<int, string, DateTime, DateTime>[] ViewOrder()
         {
+            Tuple<int, string, DateTime, DateTime>[] orderList =new Tuple<int, string , DateTime, DateTime>[_context.SurveyOrders.Select(s => s.CurrentOrder).Count()];
             int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
             listOrder = _context.SurveyOrders.Select(e => e.CurrentOrder).ToArray();
             int counter = 0;
             string[] name = new string[listOrder.Length];
+            int[] ids = new int[listOrder.Length];
+            DateTime[] startTimes = new DateTime[listOrder.Length];
+            DateTime[] endTimes = new DateTime[listOrder.Length];
             foreach (int i in listOrder)
             {
                 name[counter] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.SurveyName).First().ToString();
+                startTimes[counter] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.StartTime).First();
+                endTimes[counter] = _context.SurveyOrders.Where(f => f.CurrentOrder == i).Select(f => f.EndTime).First();
+                if (_context.SurveyOrders.Where(s => s.CurrentOrder == i).Select(t => t.SurveyId).First() != null)
+                {
+                    ids[counter] = (Int32)_context.SurveyOrders.Where(s => s.CurrentOrder == i).Select(t => t.SurveyId).First();
+                }
+                else
+                {
+                    ids[counter] = (Int32)_context.SurveyOrders.Where(s => s.CurrentOrder == i).Select(t => t.QuestionOfTheDayId).First();
+                }
                 counter++;
             }
-            return name;
+            for (int i = 0; i < orderList.Length; i++)
+            {
+                orderList[i] = new Tuple<int, string, DateTime, DateTime>(ids[i], name[i], startTimes[i], endTimes[i]);
+            }
+
+
+
+
+            return orderList;
         }
 
         //gets list of all surveys created only works if person has created surveys and they are logged in

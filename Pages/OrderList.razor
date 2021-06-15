@@ -27,7 +27,7 @@
         {
             <div class="card mb-4">
                 <div class="card-block">
-                    <h4 class="card-title">@survey.ToUpper().Count()</h4>
+                    <h4 class="card-title">@survey.Item2.ToUpper()</h4>
                     <p class="card-text">
                     </p>
                 </div>
@@ -54,7 +54,7 @@
         base.OnInitialized();
     }
 
-    public string[] ViewOrder()
+    public Tuple<int, string, DateTime, DateTime>[] ViewOrder()
     {
         return ts.ViewOrder();
     }

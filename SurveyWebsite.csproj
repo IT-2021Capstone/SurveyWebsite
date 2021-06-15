@@ -4,8 +4,6 @@
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <TargetFramework>net5.0</TargetFramework>
-	<AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
-	<AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
     <UserSecretsId>aspnet-SurveyWebsite-3EF82F02-8CBF-4B63-A914-0B0381AEC511</UserSecretsId>
   </PropertyGroup>
 

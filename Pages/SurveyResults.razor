@@ -1,20 +1,113 @@
 ﻿@page "/SurveyResults"
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@using System.Security.Claims
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject Testingstuff methods
+@inherits OwningComponentBase<Testingstuff>
 <h3>SurveyResults</h3>
 
 
-@*@foreach (survey survey in surveylist)
-{*@
-  
-    <h4>Survey: @*SurveyTitle*@</h4>
-    <label>Survey was open through: @*Begin and end dates*@</label>
-    @*
-    foreach(option in options)
+
+<h4>Survey: @*SurveyTitle*@</h4>
+<label>Survey was open through: @*Begin and end dates*@</label>
+
+@foreach (var q in getresults(1)@*put survey id here instead of a 1*@)
+{
+<div class="card mb-4">
+    @switch (q.Item1)
+    {
+        case 1:
+            //open ended, too many responses to display here, use a different page only for those with priviledges
+            //to view individual responses
+
+            <div class="card-block">
+                <h4 class="card-title">Question: @q.Item2</h4>
+            </div>
+
+            break;
+
+        case 2:
+
+            <div class="card-block">
+                <h4 class="card-title">Question: @q.Item2</h4>
+            </div>
+
+            <div class="card-block">
+                <h4 class="card-text">True: @q.Item3[0]</h4>
+                <h4 class="card-text">False: @q.Item3[1]</h4>
+                <h4 class="card-text">Total Responses: @q.Item3[2]</h4>
+            </div>
+
+            break;
+
+        case 3:
+
+            break;
+    }
+</div>
+
+
+
+
+    @*<div class="card mb-4">
+        <div class="card-block">
+            <h4 class="card-title">@q.Item2</h4>
+            <p class="card-text">
+            </p>
+        </div>
+    </div>*@
+    <span></span>
+    <br />
+    }
+
+
+
+    @code {
+
+        private Tuple<int, string, int[]>[] getresults(int sid)
         {
-            each option and percentage 
+            var surv = methods.ViewSurveyQuestions(sid);
+            int[] response = new int[surv.Length];
+            Tuple<int, string, int[]>[] results = new Tuple<int, string, int[]>[surv.Length];
+            int i = 0;
+            foreach (Tuple<int, string, int, bool> sq in surv)
+            {
+
+                switch (sq.Item3)
+                {
+                    case 1:
+                        //since this part is results of many responses, a bunch of text blocks of open answers may be too much
+                        //response = methods.GetUserResponseOpen(sq.Item1);
+                        break;
+                    case 2:
+                        //take 3rd item and do math to get percentage for first 2 parts of the array?
+                        response = methods.GetUserTrueFalseResponses(sq.Item1);
+                        //do math in the html part? array[0] = true responses, array[1] = false responses, array[2] = total responses
+                        break;
+                    case 3:
+                        string[] multiple = methods.ViewMutipleChoice(sq.Item1);
+                        foreach (var m in multiple)
+                        {
+                            //get text for each option?
+
+                        }
+                        //take total response in array[10] and divide each item in list that is not 0
+                        //response = methods.GetUserResponseMutipleAnswers(sq.Item1);
+                        break;
+                }
+                results[i] = new Tuple<int, string, int[]>(sq.Item3, sq.Item2, response);
+                i++;
+
+                //gets text for current question test.item2
+                //gets user response for current question response
+                //what to return
+
+            }
+            return results;
+
         }
-    *@
 
-@*}*@
-@code {
 
-}
+
+    }

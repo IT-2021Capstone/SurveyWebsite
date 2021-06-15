@@ -2,6 +2,11 @@
     background-color: darkblue;
 }
 
+.clogo {
+    width: 60%;
+    transform: translateX(30%);
+}
+
 .top-row {
     height: 3.5rem;
     background: blue;

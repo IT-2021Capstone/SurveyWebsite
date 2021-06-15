@@ -10,7 +10,6 @@ namespace DataAccess.Models
         public int QuestionOfTheDayResoponseId { get; set; }
         public int QuestionOfTheDayId { get; set; }
         public int? QuestionOfTheDayMutipleResponse { get; set; }
-        public string QuestionOfTheDayOpenResponse { get; set; }
 
         public virtual QuestionOfTheDay QuestionOfTheDay { get; set; }
     }

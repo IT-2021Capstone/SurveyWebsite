@@ -23,5 +23,4 @@ namespace SurveyWebsite
                     webBuilder.UseStartup<Startup>();
                 });
     }
-    //something anywhere
 }

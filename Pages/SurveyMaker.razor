@@ -2,6 +2,7 @@
 @using DataAccessLibrary.Models
 @using System.Collections.Generic
 @inherits QuestionListBase
+
 <div>
     <h3>SurveyMaker</h3>
     <br />
@@ -13,47 +14,76 @@
 
             <label>
                 Question Type:
-                <select class="custom-select">
+                <select @bind="question.Type" class="custom-select">
                     <option value="Select" selected disabled="disabled">(Choose Type)</option>
-                    @foreach (var Type in new[] { Qtypes.Multiple_Choice, Qtypes.Multiple_Answer, Qtypes.Dropdown, Qtypes.Long_Text })
+                    @foreach (var Type in new[] { Question.Qtypes.Multiple_Choice,
+                         Question.Qtypes.Long_Text, Question.Qtypes.True_Or_False })
                     {
                         <option value="@Type">@Type.ToString().Replace("_", " ")</option>
                     }
                 </select>
             </label>
             <br />
+
             <label>Question: </label>
             <br />
             <textarea>
-                   @question.Questions.ToString()
+                   @question.QuestionText.ToString()
             </textarea>
             <br />
             <label>Question Options:</label>
-            @*@foreach (QuestionOption QO in question.QOpts)
-            { 
-                <label> Option @QO.ID</label>
-                <textarea>@QO.OptionText</textarea>
-            }*@
-            <button @onclick="@NewOption">Add Option</button>
+            <br />
+            @if (question.Type == Question.Qtypes.Multiple_Choice)
+            {
+                @*@foreach (QuestionOption QO in question.QOpts)
+                {
+                    <label>
+                        &nbsp;&nbsp;&nbsp;&nbsp; Option @QO.ID:
+                        &nbsp;&nbsp;&nbsp;&nbsp;<textarea>@QO.OptionText</textarea>
+                    </label>
+                    <br />
+                    <br />
+
+                }*@
+                <button class="btn btn-secondary" @onclick="@NewOption">Add Option</button>
+            }
+            else if (question.Type == Question.Qtypes.True_Or_False)
+            {
+                <label>
+                    &nbsp;&nbsp;&nbsp;&nbsp; True:
+                    &nbsp;&nbsp;&nbsp;&nbsp;<textarea> </textarea>
+                </label>
+                <br />
+                <label>
+                    &nbsp;&nbsp;&nbsp;&nbsp; False:
+                    &nbsp;&nbsp;&nbsp;&nbsp;<textarea> </textarea>
+                </label>
+            }
+            else
+            {
+                <label>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Long Answer:
+                    &nbsp;&nbsp;&nbsp;&nbsp;<textarea> </textarea>
+                </label>
+
+            }
+            <br />
+            <br />
             <br />
         </div>
     }
-    <button @onclick="@NewQuestion">New Question</button>
+    <button class="btn btn-primary" @onclick="@NewQuestion">New Question</button>
     <br />
     <br />
 </div>
 <br />
 <br />
 @code {
-    enum Qtypes
-    {
-        Multiple_Choice,
-        Multiple_Answer,
-        Dropdown,
-        Long_Text
-    }
+
     private void NewOption()
-    { 
+    {
+        
+        
         
     }
     private void NewQuestion()
@@ -62,7 +92,8 @@
             new Question
             {
                 ID = Questions.Count() + 1,
-                Questions = "How are you?"
+                QuestionText = "",
+                
             }});
     }
 

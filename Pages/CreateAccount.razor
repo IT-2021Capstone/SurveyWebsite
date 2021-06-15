@@ -1,0 +1,31 @@
+﻿@page "/CreateAccount"
+
+<h3>CreateAccount</h3>
+
+<div>
+    <form>
+
+        <label>First Name: &emsp;</label> <input type="text" />
+        <br />
+        <br />
+        <label>Last Name: &emsp;</label> <input type="text" />
+        <br />
+        <br />
+        <label>Email:  &emsp;&emsp;&emsp;&nbsp;</label> <input type="text" />
+        <br />
+        <br />
+        <label>Password:  &emsp;&nbsp;</label> <input type="text" />
+        <br />
+        <br />
+        <label>Confirm Pass: </label> <input type="text" />
+        <br>
+
+        <button class="btn btn-primary" @onclick="CreateUser">Create Account</button>
+    </form>
+</div>
+@code {
+    public void CreateUser()
+    { 
+        
+    }
+}

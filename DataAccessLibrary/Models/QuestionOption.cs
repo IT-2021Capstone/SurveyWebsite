@@ -9,5 +9,6 @@ namespace SurveyWebsite.DataAccessLibrary.Models
     {
         public int ID { get; set; }
         public string OptionText { get; set; }
+       
     }
 }

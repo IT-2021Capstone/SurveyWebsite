@@ -1,0 +1,61 @@
+﻿@page "/SurveysTaken"
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@using System.Security.Claims
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject Testingstuff ts
+@inherits OwningComponentBase<Testingstuff>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SurveyWebsite</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/AccountPages.css" rel="stylesheet" />
+    <link href="SurveyWebsite.styles.css" rel="stylesheet" />
+</head>
+<body>
+    <h1>Survey's Taken</h1>
+    <hr />
+    <div>
+        @foreach (var survey in ViewTaken())
+        {
+            <div class="card mb-4">
+                <div class="card-block">
+                    <h4 class="card-title">@survey.Item1.ToUpper()</h4>
+                    <p class="card-text">
+                    </p>
+                </div>
+            </div>
+            <span></span><br />
+        }
+    </div>
+</body>
+</html>
+
+@code {
+    private string user = "";
+
+    protected override void OnInitialized()
+    {
+        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        {
+
+            user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
+
+        base.OnInitialized();
+    }
+
+    public Tuple<string,int>[] ViewTaken()
+    {
+        //var n = ts.ViewTaken(user);
+        return ts.ViewTaken(user);
+    }
+}

@@ -1,0 +1,56 @@
+﻿@page "/CurrentSurvey"
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@using System.Security.Claims
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject Testingstuff ts
+@inherits OwningComponentBase<Testingstuff>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SurveyWebsite</title>
+    <base href="~/" />
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css" />
+    <link href="css/site.css" rel="stylesheet" />
+    <link href="css/AccountPages.css" rel="stylesheet" />
+    <link href="SurveyWebsite.styles.css" rel="stylesheet" />
+</head>
+<body>
+      <h1>Current Survey</h1>
+    <hr />
+    <div>
+        
+    </div>
+</body>
+</html>
+
+@code {
+    private string user = "";
+
+    protected override void OnInitialized()
+    {
+        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        {
+
+            user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
+
+        base.OnInitialized();
+    }
+    //used to get the most recently added survey
+    //private int GetCurrentSurvey()
+    //{
+    //    int sid = _context.Surveylists.OrderByDescending(q => q.SurveyId).FirstOrDefault().SurveyId;
+    //    return sid;
+    //}
+    public Tuple<string, int>[] ViewTaken()
+    {
+        //var n = ts.ViewTaken(user);
+        return ts.ViewTaken(user);
+    }
+}

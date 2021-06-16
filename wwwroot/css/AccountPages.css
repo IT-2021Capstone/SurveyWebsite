@@ -1,0 +1,99 @@
+﻿
+h1 {
+    text-align: center;
+}
+
+.button {
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: black;
+    background-color: lightgray;
+    border: none;
+    border-radius: 50px;
+    box-shadow: 0 9px #004085;
+}
+
+.button:hover {
+    background-color: aliceblue;
+}
+
+.button:active {
+    background-color: aliceblue;
+    box-shadow: 0 5px #004085;
+    transform: translateY(4px);
+}
+
+div {
+    background-color: transparent;
+/*    display: flex;
+    flex-wrap: wrap;*/
+}
+
+.card {
+    width: 200px;
+/*    flex: 1 0 33%;*/
+}
+
+.card-title {
+    color: black;
+    background-color: lightgray;
+    text-align: center;
+}
+
+.card-deck {
+    margin-left: 24px;
+}
+
+.card-block {
+    background-color: lightgray;
+    width: 200px;
+    object-fit: cover;
+}
+
+.flex-column {
+    height: 100%;
+}
+
+#profilepic {
+    width: 90%;
+}
+
+body {
+    background-color: transparent;
+}
+
+.card-deck span {
+    display: none;
+}
+
+@media (min-width:1200px) {
+    .card-deck span:nth-of-type(5n) {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media (min-width:992px) and (max-width: 1199px) {
+    .card-deck span:nth-of-type(4n) {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media (min-width:768px) and (max-width: 991px) {
+    .card-deck span:nth-of-type(3n) {
+        display: block;
+        width: 100%;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .card-deck span:nth-of-type(2n) {
+        display: block;
+        width: 100%;
+    }
+}

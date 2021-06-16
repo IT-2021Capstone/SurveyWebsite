@@ -19,6 +19,7 @@ namespace DataAccess.Models
         public int? SurveyId { get; set; }
         public string QuestionText { get; set; }
         public int QuestionType { get; set; }
+        public bool IsRequired { get; set; }
 
         public virtual QuestionType QuestionTypeNavigation { get; set; }
         public virtual Surveylist Survey { get; set; }

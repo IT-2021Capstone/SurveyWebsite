@@ -22,7 +22,7 @@ namespace SurveyWebsite.Data
         //public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         //public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+        //public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
         public virtual DbSet<MutipleAnswerQoftheDay> MutipleAnswerQoftheDays { get; set; }
         public virtual DbSet<MutipleChoiceResponse> MutipleChoiceResponses { get; set; }
@@ -54,12 +54,12 @@ namespace SurveyWebsite.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Ignore<IdentityUserLogin<string>>();
-            modelBuilder.Ignore<IdentityUserRole<string>>();
+            //modelBuilder.Ignore<IdentityUserRole<string>>();
            // modelBuilder.Ignore<IdentityUserClaim<string>>();
             modelBuilder.Ignore<IdentityUserToken<string>>();
-            modelBuilder.Ignore<IdentityUser<string>>();
-            modelBuilder.Ignore<IdentityRole<string>>();
-            // modelBuilder.Entity<IdentityUserRole<Guid>>().HasKey(p => new { p.UserId, p.RoleId });
+           // modelBuilder.Ignore<IdentityUser<string>>();
+           // modelBuilder.Ignore<IdentityRole<string>>();
+            modelBuilder.Entity<AspNetUserRole>().HasKey(p => new { p.UserId, p.RoleId });
             //modelBuilder.Entity<AspNetRole>(entity =>
             //{
             //    entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
@@ -127,22 +127,21 @@ namespace SurveyWebsite.Data
                     .HasForeignKey(d => d.UserId);
             });
 
-            modelBuilder.Entity<AspNetUserRole>(entity =>
-            {
-                entity.HasKey(e => new { e.UserId, e.RoleId });
+            //modelBuilder.Entity<AspNetUserRole>(entity =>
+            //{
+            //    entity.HasKey(e => new { e.UserId, e.RoleId });
 
-                entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
+            //    entity.HasIndex(e => e.RoleId, "IX_AspNetUserRoles_RoleId");
 
-                entity.Property(e => e.RoleType).HasColumnType("RoleType");
 
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.AspNetUserRoles)
-                    .HasForeignKey(d => d.RoleId);
+            //    entity.HasOne(d => d.Role)
+            //        .WithMany(p => p.AspNetUserRoles)
+            //        .HasForeignKey(d => d.RoleId);
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.AspNetUserRoles)
-                    .HasForeignKey(d => d.UserId);
-            });
+            //    entity.HasOne(d => d.User)
+            //        .WithMany(p => p.AspNetUserRoles)
+            //        .HasForeignKey(d => d.UserId);
+            //});
 
             modelBuilder.Entity<AspNetUserToken>(entity =>
             {

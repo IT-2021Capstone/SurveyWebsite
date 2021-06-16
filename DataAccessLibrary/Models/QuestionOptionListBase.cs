@@ -9,10 +9,10 @@ namespace SurveyWebsite.DataAccessLibrary.Models
 {
     public class QuestionOptionListBase : ComponentBase
     {
-        public static IEnumerable<QuestionOption> QuestionOptions { get; set;}
+        public static IEnumerable<QuestionOption> QuestionOptions { get; set; }
         protected override Task OnInitializedAsync()
         {
-            
+
             return base.OnInitializedAsync();
         }
     }

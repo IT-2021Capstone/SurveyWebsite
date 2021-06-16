@@ -10,11 +10,11 @@
 
 
 <h4>Survey: @*SurveyTitle*@</h4>
-<label>Survey was open through: @*Begin and end dates*@</label>
+<!--<label>Survey was open through:--> @*Begin and end dates*@<!--</label>-->
 
-@foreach (var q in getresults(1)@*put survey id here instead of a 1*@)
+@foreach (var q in getresults(5)@*pass in survey id here instead of a 5*@)
 {
-<div class="card mb-4">
+
     @switch (q.Item1)
     {
         case 1:
@@ -23,7 +23,10 @@
             <div class="card-block">
                 <h4 class="card-title">Question: @q.Item2</h4>
             </div>
+            <div class="card-block">
+                <h4 class="card-text">Answers are open ended@*link to another page?*@</h4>
 
+            </div>
             break;
 
         case 2:
@@ -33,30 +36,25 @@
             </div>
 
             <div class="card-block">
-                <h4 class="card-text">True: @q.Item3[0]</h4>
-                <h4 class="card-text">False: @q.Item3[1]</h4>
+                <h4 class="card-text">True: @((float)Math.Round(((float)q.Item3[0]/ q.Item3[2])*100))%</h4>
+                <h4 class="card-text">False: @((float)Math.Round(((float)q.Item3[1]/ q.Item3[2])*100))%</h4>
                 <h4 class="card-text">Total Responses: @q.Item3[2]</h4>
             </div>
 
             break;
 
         case 3:
+            <div class="card-block">
+                <h4 class="card-title">Question: @q.Item2</h4>
+            </div>
 
+            <div class="card-block">
+                <h4 class="card-text">Total Answers: @q.Item3</h4>
+            </div>
             break;
     }
-</div>
 
 
-
-
-    @*<div class="card mb-4">
-        <div class="card-block">
-            <h4 class="card-title">@q.Item2</h4>
-            <p class="card-text">
-            </p>
-        </div>
-    </div>*@
-    <span></span>
     <br />
     }
 
@@ -82,7 +80,7 @@
                     case 2:
                         //take 3rd item and do math to get percentage for first 2 parts of the array?
                         response = methods.GetUserTrueFalseResponses(sq.Item1);
-                        //do math in the html part? array[0] = true responses, array[1] = false responses, array[2] = total responses
+                        //percentage formatting is done in html
                         break;
                     case 3:
                         string[] multiple = methods.ViewMutipleChoice(sq.Item1);
@@ -91,8 +89,8 @@
                             //get text for each option?
 
                         }
-                        //take total response in array[10] and divide each item in list that is not 0
-                        //response = methods.GetUserResponseMutipleAnswers(sq.Item1);
+                        //take total response in array[10] and divide each item in list that is not 0?
+                        response = methods.GetUserResponseMutipleAnswers(sq.Item1, multiple.Count());
                         break;
                 }
                 results[i] = new Tuple<int, string, int[]>(sq.Item3, sq.Item2, response);
@@ -100,13 +98,11 @@
 
                 //gets text for current question test.item2
                 //gets user response for current question response
-                //what to return
 
             }
             return results;
 
         }
-
 
 
     }

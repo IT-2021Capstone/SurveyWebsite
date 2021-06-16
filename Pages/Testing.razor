@@ -1,11 +1,12 @@
 @page "/Testing"
+@attribute [Authorize(Policy ="RequireCreation")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff ts
 @inherits OwningComponentBase<Testingstuff>
-
 
 <h3>Testing</h3>
 <button class="btn btn-primary" @onclick="questionAdd"> addQuestion </button>
@@ -17,19 +18,58 @@
 
     protected override void OnInitialized()
     {
-        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated )
+        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
-
             user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
 
         base.OnInitialized();
     }
+
+    //example survey create
+    //private void submitSurveyCreate()
+    //{
+    //    DateTime start = DateTime.Now;
+    //    DateTime end = DateTime.Now;
+    //    string name = "my First Survey";
+    //    int[] qtype = new int[] { 1,2,3};
+    //    string[] qtext = new string[] { "openeded", "trueFalse", "favoriteNumber" };
+    //    string[] mutipleText = new string[] { "1", "2", "3", "4" };
+    //    var surveyId = ts.AddSurvey(user, start, end, name);
+    //    for(int i = 0; i<qtype.Length;i++)
+    //    {
+    //        if (qtype[i] != 3)
+    //        {
+    //            ts.SendQuestion(surveyId, qtext[i], qtype[i]);
+    //        }
+    //        else
+    //        {
+    //            ts.SendQuestionMultiple(surveyId, qtext[i], qtype[i], mutipleText);
+    //        }
+    //    }
+    //}
+    //private void submitSurveyResponse()
+    //{
+    //    string[] qtext = new string[] { "openeded", "trueFalse", "favoriteNumber" };
+    //    string[] mutipleText = new string[] { "1", "2", "3", "4" };
+    //    for(int i = 0; i<qtype.Length;i++)
+    //    {
+    //        if (qtype[i] != 3)
+    //        {
+    //            ts.SendQuestion(surveyId, qtext[i], qtype[i]);
+    //        }
+    //        else
+    //        {
+    //            ts.SendQuestionMultiple(surveyId, qtext[i], qtype[i], mutipleText);
+    //        }
+    //    }
+    //}
+
     public void questionAdd()
     {
 
-        
+
 
         //var survey = ts.AddSurvey(user, DateTime.Now, DateTime.Today, "genral Survey Name");
         //string[] arr = { "a", "n", "c" };

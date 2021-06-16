@@ -38,22 +38,21 @@ namespace SurveyWebsite.Pages
             bool[] isRequired =_context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.IsRequired).ToArray();
             for (int i = 0; i < surveyQuestionList.Length; i++)
             {
-
                 surveyQuestionList[i] =new Tuple<int, string, int, bool>(questionid[i],questionText[i],questiontype[i], isRequired[i]);
             }
             return surveyQuestionList;
         }
-        public Tuple<string, int >[] ViewQuestionsofTheDay(int qId)
+        //gets the question of the day info the question of the day id, the text for the question and the question type
+        public Tuple<int,string, int> ViewQuestionsofTheDay()
         {
+            //gets today's question ID
+            int current = _context.QuestionOfTheDays.Where(qotd => DateTime.Now <= qotd.DateStarted && DateTime.Now <= qotd.DateEnded).Select(q => q.QuestionOfTheDayId).First();               
+            //gets the question of the day
+            Tuple<int, string, int> surveyQuestionList;
+            string questionText = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == current).Select(q => q.QuestionOfDayText).First();
+            int questiontype = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == current).Select(q => q.QuestionOfDayType).First();
 
-            Tuple<string, int>[] surveyQuestionList = new Tuple<string, int>[_context.Questions.Where(q => q.SurveyId == qId).Count()];
-            string[] questionText = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qId).Select(q => q.QuestionOfDayText).ToArray();
-            int[] questiontype = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qId).Select(q => q.QuestionOfDayType).ToArray();
-            for (int i = 0; i < surveyQuestionList.Length; i++)
-            {
-
-                surveyQuestionList[i] = new Tuple<string, int>(questionText[i], questiontype[i]);
-            }
+            surveyQuestionList = new Tuple<int, string, int>(current, questionText, questiontype);           
             return surveyQuestionList;
         }
 
@@ -125,10 +124,6 @@ namespace SurveyWebsite.Pages
             {
                 orderList[i] = new Tuple<int, string, DateTime, DateTime>(ids[i], name[i], startTimes[i], endTimes[i]);
             }
-
-
-
-
             return orderList;
         }
 
@@ -173,33 +168,33 @@ namespace SurveyWebsite.Pages
 
         #region get user resposnse
         //get the response for questions with more then 2 responses also has total resposnse for this question
-        public int[] GetUserResponseMutipleAnswers(int qid, int TAnswers)
+        public int[] GetUserResponseMutipleAnswers(int qid, int TotalAnswers)
         {
-            int tAnswers = TAnswers;
+            int tAnswers = TotalAnswers;
             var questionID = qid;
             int total = 0;
             int[] answerNum = new int[11];
-            for (int i = 0; i < TAnswers; i++)
+            for (int i = 0; i < TotalAnswers; i++)
             {
                 answerNum[i] = _context.MutipleChoiceResponses.Where(s => s.QuestionId == questionID && s.MutipleChoiceUserResponse == i + 1).Select(s => s.MutipleChoiceUserResponse).Count();
                 total = total + answerNum[i];
             }
-            answerNum[TAnswers] = total;
+            answerNum[TotalAnswers] = total;
             return answerNum;
         }
 
         //same as above but for question of the day
-        public int[] GetUserResponseMutipleAnswersQotD(int qid, int TAnswers)
+        public int[] GetUserResponseMutipleAnswersQotD(int qid, int TotalAnswers)
         {
-            int tAnswers = TAnswers;
+            int tAnswers = TotalAnswers;
             int total = 0;
             int[] answerNum = new int[11];
-            for (int i = 0; i < TAnswers; i++)
+            for (int i = 0; i < TotalAnswers; i++)
             {
                 answerNum[i] = _context.QuestionOfTheDayResponses.Where(s => s.QuestionOfTheDayId == qid && s.QuestionOfTheDayMutipleResponse == i + 1).Select(s => s.QuestionOfTheDayMutipleResponse).Count();
                 total = total + answerNum[i];
             }
-            answerNum[TAnswers] = total;
+            answerNum[TotalAnswers] = total;
             return answerNum;
         }
 
@@ -664,25 +659,16 @@ namespace SurveyWebsite.Pages
         #endregion
 
 
-
-
-        // will get user role once I have it set up used to see who can create surveys
-        //public int GetUserRole(string role)
-        //{
-        //    int roletype = (Int32)_context.AspNetUserRoles.Where(u => u.RoleId == role).Select(r => r.RoleType).FirstOrDefault();
-        //    return roletype;
-        //}
-
         //change the role of a user to give them the ablitily to create surveys
-        //public void ChangeUserRole(string uId, int roleType)
+        //public void ChangeUserRole(string uId, string roleName)
         //{
         //    string UserId = uId;
-        //    int role = roleType;
+        //    string role = roleName;
         //    SqlParameter param1 = new SqlParameter("@role", role);
         //    SqlParameter param2 = new SqlParameter("@LoginId", UserId);
-        //    var qotdr = _context.AspNetUserRoles
-        //         .FromSqlRaw("EXECUTE ChangeUserRole @role, @LoginId", param1, param2)
-        //         .ToArray();
+        //    var qotdr = _context.Database.ExecuteSqlRaw
+        //         ("EXECUTE ChangeUserRole @role, @LoginId", param1, param2);
+                 
 
         //}
     }

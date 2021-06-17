@@ -181,7 +181,7 @@ namespace SurveyWebsite.Pages
             int[] answerNum = new int[11];
             for (int i = 0; i < TAnswers; i++)
             {
-                answerNum[i] = _context.MutipleChoiceResponses.Where(s => s.QuestionId == questionID && s.MutipleChoiceUserResponse == i + 1).Select(s => s.MutipleChoiceUserResponse).Count();
+                answerNum[i] = _context.MutipleChoiceResponses.Where(s => s.QuestionId == questionID && s.MutipleChoiceUserResponse == (i + 1)).Select(s => s.MutipleChoiceUserResponse).Count();
                 total = total + answerNum[i];
             }
             answerNum[TAnswers] = total;

@@ -11,17 +11,16 @@
 
 <h4>Survey: @*SurveyTitle*@</h4>
 <!--<label>Survey was open through:--> @*Begin and end dates*@<!--</label>-->
-
-@foreach (var q in getresults(5)@*pass in survey id here instead of a 5*@)
+@{int k = 0;}
+@for (int i = 0; i < getresults(5).Length; i++)@*pass in survey id here instead of a 5*@
 {
-
-    @switch (q.Item1)
+    switch (theseresults[i].Item1)
     {
         case 1:
             //open ended, too many responses to display here, use a different page only for those with priviledges
 
             <div class="card-block">
-                <h4 class="card-title">Question: @q.Item2</h4>
+                <h4 class="card-title">Question: @theseresults[i].Item2</h4>
             </div>
             <div class="card-block">
                 <h4 class="card-text">Answers are open ended@*link to another page?*@</h4>
@@ -32,77 +31,84 @@
         case 2:
 
             <div class="card-block">
-                <h4 class="card-title">Question: @q.Item2</h4>
+                <h4 class="card-title">Question: @theseresults[i].Item2</h4>
             </div>
 
             <div class="card-block">
-                <h4 class="card-text">True: @((float)Math.Round(((float)q.Item3[0]/ q.Item3[2])*100))%</h4>
-                <h4 class="card-text">False: @((float)Math.Round(((float)q.Item3[1]/ q.Item3[2])*100))%</h4>
-                <h4 class="card-text">Total Responses: @q.Item3[2]</h4>
+                <h4 class="card-text">True: @((float)Math.Round(((float)theseresults[i].Item3[0] / theseresults[i].Item3[2]) * 100))%</h4>
+                <h4 class="card-text">False: @((float)Math.Round(((float)theseresults[i].Item3[1] / theseresults[i].Item3[2]) * 100))%</h4>
+                <h4 class="card-text">Total Responses: @theseresults[i].Item3[2]</h4>
             </div>
 
             break;
 
         case 3:
             <div class="card-block">
-                <h4 class="card-title">Question: @q.Item2</h4>
+                <h4 class="card-title">Question: @theseresults[i].Item2</h4>
             </div>
 
+            //List<string> multiplechoiceresults = methods.ViewMutipleChoice(theseresults[i].Item1).ToList();
+
             <div class="card-block">
-                <h4 class="card-text">Total Answers: @q.Item3</h4>
+                @for (int j = 0; j < multiplechoicelist[k].Count(); j++)
+                {
+
+                    <h4 class="card-text">@multiplechoicelist[k][j]: @theseresults[i].Item3[j]</h4>
+
+                }
+                @{k = k + 1;
+                }
             </div>
+
             break;
     }
 
 
     <br />
-    }
+}
 
 
 
-    @code {
+@code {
 
-        private Tuple<int, string, int[]>[] getresults(int sid)
+    List<string> multiplechoicetext = new List<string>();
+    List<List<string>> multiplechoicelist = new List<List<string>>();
+
+    private Tuple<int, string, int[]>[] getresults(int sid)
+    {
+        var surv = methods.ViewSurveyQuestions(sid);
+        int[] response = new int[surv.Length];
+        Tuple<int, string, int[]>[] results = new Tuple<int, string, int[]>[surv.Length];
+        int i = 0;
+
+
+        foreach (Tuple<int, string, int, bool> sq in surv)
         {
-            var surv = methods.ViewSurveyQuestions(sid);
-            int[] response = new int[surv.Length];
-            Tuple<int, string, int[]>[] results = new Tuple<int, string, int[]>[surv.Length];
-            int i = 0;
-            foreach (Tuple<int, string, int, bool> sq in surv)
+            switch (sq.Item3)
             {
+                case 1:
+                    //since this part is open results of many responses, a seperate page should be used instead
+                    //response = methods.GetUserResponseOpen(sq.Item1);
+                    break;
+                case 2:
+                    //take counted true/false responses and convert to percentage in html portion
+                    response = methods.GetUserTrueFalseResponses(sq.Item1);
+                    break;
+                case 3:
+                    multiplechoicetext = methods.ViewMutipleChoice(sq.Item1).ToList();
+                    multiplechoicelist.Add(multiplechoicetext);
 
-                switch (sq.Item3)
-                {
-                    case 1:
-                        //since this part is results of many responses, a bunch of text blocks of open answers may be too much
-                        //response = methods.GetUserResponseOpen(sq.Item1);
-                        break;
-                    case 2:
-                        //take 3rd item and do math to get percentage for first 2 parts of the array?
-                        response = methods.GetUserTrueFalseResponses(sq.Item1);
-                        //percentage formatting is done in html
-                        break;
-                    case 3:
-                        string[] multiple = methods.ViewMutipleChoice(sq.Item1);
-                        foreach (var m in multiple)
-                        {
-                            //get text for each option?
-
-                        }
-                        //take total response in array[10] and divide each item in list that is not 0?
-                        response = methods.GetUserResponseMutipleAnswers(sq.Item1, multiple.Count());
-                        break;
-                }
-                results[i] = new Tuple<int, string, int[]>(sq.Item3, sq.Item2, response);
-                i++;
-
-                //gets text for current question test.item2
-                //gets user response for current question response
-
+                    response = methods.GetUserResponseMutipleAnswers(sq.Item1, multiplechoicetext.Count());
+                    //text for multiple choice options is output in html portion, this portion only counts votes and outputs
+                    break;
             }
-            return results;
-
+            results[i] = new Tuple<int, string, int[]>(sq.Item3, sq.Item2, response);
+            i++;
         }
-
+        theseresults = results;
+        return results;
 
     }
+
+    private Tuple<int, string, int[]>[] theseresults;
+}

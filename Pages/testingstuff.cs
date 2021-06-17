@@ -46,7 +46,7 @@ namespace SurveyWebsite.Pages
         public Tuple<int,string, int> ViewQuestionsofTheDay()
         {
             //gets today's question ID
-            int current = _context.QuestionOfTheDays.Where(qotd => DateTime.Now <= qotd.DateStarted && DateTime.Now <= qotd.DateEnded).Select(q => q.QuestionOfTheDayId).First();               
+            int current = _context.QuestionOfTheDays.Where(qotd => DateTime.Now >= qotd.DateStarted && DateTime.Now <= qotd.DateEnded).Select(q => q.QuestionOfTheDayId).First();               
             //gets the question of the day
             Tuple<int, string, int> surveyQuestionList;
             string questionText = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == current).Select(q => q.QuestionOfDayText).First();

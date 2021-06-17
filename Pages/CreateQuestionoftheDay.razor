@@ -1,0 +1,159 @@
+﻿@page "/SurveyMaker"
+@using DataAccess.Models
+@using Microsoft.AspNetCore.Html
+@using static System.Text.Encodings.Web.HtmlEncoder;
+@using System.Collections.Generic
+@inject Testingstuff qs
+@inherits OwningComponentBase<Testingstuff>
+
+<div>
+    <h3>SurveyMaker</h3>
+    <br />
+    <h3>CreateSurvey</h3>
+    <label>
+        <label for="sname">Survey name:</label>
+        <input type="text" @bind="qName"><br>
+
+        <label for="start">Start date:</label>
+        <input type="date" id="start" name="Survey-start"
+               @bind="startTime"
+               min="2021-01-01" max="2500-12-31">
+        <br>
+        <label for="end">End date:</label>
+        <input type="date" id="end" name="Survey-End"
+               @bind="endTime"
+               min="2021-01-01" max="2500-12-31">
+        <br>
+        Question Type:
+        <label for="question">Choose the type of Question you want:</label>
+        <select  @bind="selectedValue" name="Type" id="Type">
+            <option value=1>Open</option>
+            <option value=2>True False</option>
+            <option value=3>Mutiple Choice</option>
+        </select>
+        <br>
+    </label>
+
+    <h4>Question</h4>
+    <br />
+    <div>
+
+
+        @if (selectedValue == 1)
+        {
+            <form>
+                <label>
+                    <input type="checkbox" id="required1" name="required1" value=0>
+                    <label for="required1"> Is This Question Optional?</label><br>
+                    <label for="qtext1">Question Text:</label>
+                    <input type="text" @bind=bindingItem><br>
+
+
+                    <br>
+                    <label for="openQ1">This will be what the textbox will look like on the survey:</label>
+                    <br>
+                    <textarea id="openQ1" name="openQ1" rows="4" cols="50">
+                    Write Here
+                    </textarea>
+                    <br><br>
+                </label>
+            </form>
+        }
+        else if (selectedValue == 2)
+        {
+            <form>
+                <label>
+
+                    <input type="checkbox" id="required2" name="required2" value=0>
+                    <label for="required2"> Is This Question Optional?</label><br>
+                    <label for="qtext2">Question Text:</label>
+                    <input type="text" @bind=bindingItem><br>
+
+                    <label for="trueF1">This will be what the Truefalse will look like in the finished Survey:</label>
+                    <br>
+                    <input type="radio" id="true1" name="TrueF1" value=1>
+                    <label for="true1">True</label><br>
+                    <input type="radio" id="false1" name="TrueF1" value=0>
+                    <label for="false1">False</label><br>
+                    <br>
+
+                </label>
+            </form>
+        }
+
+        else if (selectedValue == 3)
+        {
+            <input type="checkbox" id="required3" name="required3" value=0>
+            <label for="required3"> Is This Question Optional?</label><br>
+            <label for="qtext3">Question Text:</label>
+
+            <input type="text" @bind=bindingItem><br>
+            <button @onclick="AddChoice" class=" btn btn-primary">AddChoice</button>
+            @for (int k = 0; k < choices.Count; k++)
+            {
+                int index2 = k;
+
+                <div>
+                    <label for="qtext3">MutipleChoice:</label>
+                    <input type="text" @onchange="(e) => UpdateChoice(index2, e.Value.ToString())" value="@choices[k]" />
+                    <button @onclick="() => RemoveChoice(index2)" class="=btn btn-outline-danger">Remove</button><br />
+                </div>
+            }
+        }
+        <br />
+        <br />
+        <br />
+    </div>
+    <button class="btn btn-primary" @onclick="() => SubmitSurvey(bindingItem, selectedValue, startTime, endTime, qName)">Submit Question</button>
+    <br />
+
+    <br />
+</div>
+<br />
+<br />
+
+@code
+{
+
+    //List<Question> Questions = new List<Question>();
+    private List<string> choices = new List<string>();
+    private void AddChoice() => choices.Add("");
+    private void UpdateChoice(int k, string choice) => choices[k] = choice;
+    private void RemoveChoice(int k) => choices.RemoveAt(k);
+    private int Questions;
+    private int selectedValue = 1;
+    private string questionValue { get; set; }
+    private string[] questionText;
+    private string bindingItem;
+    private int totalqtypes = 0;
+    private DateTime startTime = DateTime.Now;
+    private DateTime endTime = DateTime.Now;
+    private string qName;
+
+
+    private void NewOption()
+    {
+        string text = "";
+        totalqtypes++;
+    }
+    private void NewQuestion(int type)
+    {
+        Questions = type;
+
+    }
+
+    private void SubmitSurvey(string question, int type, DateTime start, DateTime end, string name)
+    {
+
+        if (type != 3)
+        {
+            qs.SendQuestionOfTheDay(question, type, start, end, name);
+        }
+        else
+        {
+            questionText = choices.ToArray();
+            qs.SendQuestionMultipleQotD(question, type, start, end, questionText, name);
+        }
+    }
+}
+

@@ -1,8 +1,10 @@
 ﻿@page "/QODResults"
 @inject NavigationManager nav
 @attribute [Authorize(Policy = "RequireCreation")]
-@using SurveyWebsite.Data
-@using SurveyWebsite.Pages
+@using DataAccess.Models
+@using Microsoft.AspNetCore.Html
+@using static System.Text.Encodings.Web.HtmlEncoder;
+@using System.Collections.Generic
 @using System.Security.Claims
 @using Microsoft.AspNetCore.WebUtilities
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
@@ -69,7 +71,7 @@
 @code {
 
     System.Uri uri;
-    int Value=0;
+    int Value = 0;
 
     List<string> multiplechoicetext = new List<string>();
     List<List<string>> multiplechoicelist = new List<List<string>>();

@@ -1,7 +1,10 @@
 ﻿@page "/HomeAfterLogin"
 @attribute [Authorize]
-@using SurveyWebsite.Data
-@using SurveyWebsite.Pages
+@using DataAccess.Models
+@using Microsoft.AspNetCore.Html
+@using static System.Text.Encodings.Web.HtmlEncoder;
+@using System.Collections.Generic
+@using System.Security.Claims
 @inject Testingstuff ts
 @inject NavigationManager NavMangr
 @inherits OwningComponentBase<Testingstuff>

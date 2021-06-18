@@ -22,15 +22,18 @@
 <body>
     <h1>Account Page</h1>
     <hr />
-    <div class="row" id="profilesidebar">
+    <div class="row" id="profilebar">
         <div>
-            @*<img src="" alt="profile" id="profilepic">*@
+            <!--<img src="" alt="profile" id="profilepic">@*this code is for profile info if desired later*@
             <h5>Role: </h5>
-            @*<h5>Survey's Created: </h5>
-        <h5>Survey's Taken: </h5>*@
+            <h5>Survey's Created: </h5>
+            <h5>Survey's Taken: </h5>-->
             <a href="Identity/Account/Manage" class="btn btn-primary active profbutton" role="button">Profile Settings</a>
-            <button class="btn btn-primary button" @onclick="OpenCurrentSurvey"> Take Current Survey! </button>
-        </div>
+            <ul>
+                <li><button class="btn btn-primary button" @onclick="goHome"> Answer the QOTD </button></li>
+                <li><button class="btn btn-primary button" @onclick="ViewOrder"> Pick a Survey to Take </button></li>
+            </ul>
+        </div>@*home after login redirect to answer questionoftheday*@
     </div>
     <div class="row">
         <div class="flex-column">
@@ -39,7 +42,7 @@
                     <div class="card-block">
                         <h4 class="card-title">Survey's Taken</h4>
                         <p class="card-text">
-                            Click this Button to see the Survey's you have taken.<br />
+                            Click this Button to see the Survey's you have taken in the past.<br />
                             <button class="btn btn-primary" @onclick="TakenRedirect"> Survey's Taken </button>
                         </p>
                     </div>
@@ -49,7 +52,7 @@
                     <div class="card-block">
                         <h4 class="card-title">Survey's Created</h4>
                         <p class="card-text">
-                            Click this Button to see your Created Survey's.<br />
+                            Click this Button to see your Created Survey's on this site.<br />
                             <button class="btn btn-primary" @onclick="CreatedRedirect"> Survey's Created </button>
                         </p>
                     </div>
@@ -57,9 +60,9 @@
                 <span></span>
                 <div class="card mb-4">
                     <div class="card-block">
-                        <h4 class="card-title">Survey Order List</h4>
+                        <h4 class="card-title">Survey Order</h4>
                         <p class="card-text">
-                            Click this Button to see the Order of the Surveys currently on the site.<br />
+                            Click this Button to see the Order of the current Survey list.<br />
                             <button class="btn btn-primary" @onclick="ViewOrder"> Order of Surveys </button>
                         </p>
                     </div>
@@ -89,6 +92,9 @@
         base.OnInitialized();
     }
 
+    [Parameter]
+    public int Value { get; set; }
+
     private void TakenRedirect()
     {
         NavMngr.NavigateTo("/SurveysTaken");
@@ -104,8 +110,10 @@
         NavMngr.NavigateTo("/OrderList");
     }
 
-    private void OpenCurrentSurvey()
-        {
-            NavMngr.NavigateTo("/CurrentSurvey");
-        }
+    private void goHome()
+    {
+        NavMngr.NavigateTo("/HomeAfterLogin");
+    }
+
+
 }

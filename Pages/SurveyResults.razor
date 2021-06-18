@@ -1,20 +1,114 @@
 ﻿@page "/SurveyResults"
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@using System.Security.Claims
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject Testingstuff methods
+@inherits OwningComponentBase<Testingstuff>
 <h3>SurveyResults</h3>
 
 
-@*@foreach (survey survey in surveylist)
-{*@
-  
-    <h4>Survey: @*SurveyTitle*@</h4>
-    <label>Survey was open through: @*Begin and end dates*@</label>
-    @*
-    foreach(option in options)
-        {
-            each option and percentage 
-        }
-    *@
 
-@*}*@
+<h4>Survey: @*SurveyTitle*@</h4>
+<!--<label>Survey was open through:--> @*Begin and end dates*@<!--</label>-->
+@{int k = 0;}
+@for (int i = 0; i < getresults(5).Length; i++)@*pass in survey id here instead of a 5*@
+{
+    switch (theseresults[i].Item1)
+    {
+        case 1:
+            //open ended, too many responses to display here, use a different page only for those with priviledges
+
+            <div class="card-block">
+                <h4 class="card-title">Question: @theseresults[i].Item2</h4>
+            </div>
+            <div class="card-block">
+                <h4 class="card-text">Answers are open ended@*link to another page?*@</h4>
+
+            </div>
+            break;
+
+        case 2:
+
+            <div class="card-block">
+                <h4 class="card-title">Question: @theseresults[i].Item2</h4>
+            </div>
+
+            <div class="card-block">
+                <h4 class="card-text">True: @((float)Math.Round(((float)theseresults[i].Item3[0] / theseresults[i].Item3[2]) * 100))%</h4>
+                <h4 class="card-text">False: @((float)Math.Round(((float)theseresults[i].Item3[1] / theseresults[i].Item3[2]) * 100))%</h4>
+                <h4 class="card-text">Total Responses: @theseresults[i].Item3[2]</h4>
+            </div>
+
+            break;
+
+        case 3:
+            <div class="card-block">
+                <h4 class="card-title">Question: @theseresults[i].Item2</h4>
+            </div>
+
+            //List<string> multiplechoiceresults = methods.ViewMutipleChoice(theseresults[i].Item1).ToList();
+
+            <div class="card-block">
+                @for (int j = 0; j < multiplechoicelist[k].Count(); j++)
+                {
+
+                    <h4 class="card-text">@multiplechoicelist[k][j]: @theseresults[i].Item3[j]</h4>
+
+                }
+                @{k = k + 1;
+                }
+            </div>
+
+            break;
+    }
+
+
+    <br />
+}
+
+
+
 @code {
 
+    List<string> multiplechoicetext = new List<string>();
+    List<List<string>> multiplechoicelist = new List<List<string>>();
+
+    private Tuple<int, string, int[]>[] getresults(int sid)
+    {
+        var surv = methods.ViewSurveyQuestions(sid);
+        int[] response = new int[surv.Length];
+        Tuple<int, string, int[]>[] results = new Tuple<int, string, int[]>[surv.Length];
+        int i = 0;
+
+
+        foreach (Tuple<int, string, int, bool> sq in surv)
+        {
+            switch (sq.Item3)
+            {
+                case 1:
+                    //since this part is open results of many responses, a seperate page should be used instead
+                    //response = methods.GetUserResponseOpen(sq.Item1);
+                    break;
+                case 2:
+                    //take counted true/false responses and convert to percentage in html portion
+                    response = methods.GetUserTrueFalseResponses(sq.Item1);
+                    break;
+                case 3:
+                    multiplechoicetext = methods.ViewMutipleChoice(sq.Item1).ToList();
+                    multiplechoicelist.Add(multiplechoicetext);
+
+                    response = methods.GetUserResponseMutipleAnswers(sq.Item1, multiplechoicetext.Count());
+                    //text for multiple choice options is output in html portion, this portion only counts votes and outputs
+                    break;
+            }
+            results[i] = new Tuple<int, string, int[]>(sq.Item3, sq.Item2, response);
+            i++;
+        }
+        theseresults = results;
+        return results;
+
+    }
+
+    private Tuple<int, string, int[]>[] theseresults;
 }

@@ -1,8 +1,10 @@
 ﻿@page "/SurveyResults"
 @inject NavigationManager nav
 @attribute [Authorize(Policy = "RequireCreation")]
-@using SurveyWebsite.Data
-@using SurveyWebsite.Pages
+@using DataAccess.Models
+@using Microsoft.AspNetCore.Html
+@using static System.Text.Encodings.Web.HtmlEncoder;
+@using System.Collections.Generic
 @using System.Security.Claims
 @using Microsoft.AspNetCore.WebUtilities
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
@@ -28,7 +30,7 @@
             <div class="card-block">
                 <h4 class="card-text">Answers are open ended@*link to another page?*@<a href="/OpenResults?Value=@surv[i].Item1&Title=@surv[i].Item2">@surv[i].Item2.ToUpper()</a></h4>
             </div>
-            
+
             break;
 
         case 2:

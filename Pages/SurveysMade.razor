@@ -1,7 +1,9 @@
 ﻿@page "/SurveysMade"
 @attribute [Authorize]
-@using SurveyWebsite.Data
-@using SurveyWebsite.Pages
+@using DataAccess.Models
+@using Microsoft.AspNetCore.Html
+@using static System.Text.Encodings.Web.HtmlEncoder;
+@using System.Collections.Generic
 @using System.Security.Claims
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff ts
@@ -27,7 +29,7 @@
             <ul>
                 @foreach (var survey in ViewCreated())
                 {
-                    
+
                     <li><a href="/SurveyResults?Value=@survey.Item2&Title=@survey.Item1">@survey.Item1.ToUpper()</a></li>
                 }
             </ul>

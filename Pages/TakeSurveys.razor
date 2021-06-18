@@ -199,13 +199,16 @@
         ViewThisSurveyQuestions = ts.ViewSurveyQuestions(sid);
         foreach (var sq in ViewThisSurveyQuestions)
         {
+            if (sq.Item3 == 1)
+            {
+                bindingString.Add("");
+            }
             if (sq.Item3 == 3)
             {
                 multiplechoicetext = ts.ViewMutipleChoice(sq.Item1).ToList();
                 multiplechoicelist.Add(multiplechoicetext);
             }
         }
-        bindingString.Add("1");
         return ViewThisSurveyQuestions.Length;
     }
 

@@ -1,0 +1,45 @@
+﻿@page "/OpenResults"
+@inject NavigationManager nav
+@attribute [Authorize(Policy = "RequireCreation")]
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@using System.Security.Claims
+@using Microsoft.AspNetCore.WebUtilities
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject Testingstuff methods
+@inherits OwningComponentBase<Testingstuff>
+<h3>ViewOpen</h3>
+
+
+
+
+<div class="card-block">
+    <h4 class="card-title">Question: @methods.GetQuestionText(Value)</h4>
+</div>
+@foreach(string response in methods.GetUserResponseOpen(Value) )
+    {
+    <div class="card-block">
+        <h4 class="card-text">@response</h4>
+    </div>
+    }
+
+
+@code {
+    System.Uri uri;
+    int Value;
+    
+    //extracts the parameters from the uri
+    protected override void OnInitialized()
+    {
+        uri = nav.ToAbsoluteUri(nav.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Value", out var value))
+        {
+            Value = int.Parse(value);
+        }
+        base.OnInitialized();
+    }
+
+
+
+
+}

@@ -1,8 +1,10 @@
 ﻿@page "/QODResults"
+@inject NavigationManager nav
 @attribute [Authorize(Policy = "RequireCreation")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
+@using Microsoft.AspNetCore.WebUtilities
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff methods
 @inherits OwningComponentBase<Testingstuff>
@@ -23,7 +25,7 @@
                 <h4 class="card-title">Question: @theseresults[0].Item2</h4>
             </div>
             <div class="card-block">
-                <h4 class="card-text">Answers are open ended@*link to another page?*@</h4>
+                <h4 class="card-text">Answers are open ended@*link to another page?*@<a href="/OpenResultsQotD?Value=@QOD.Item1&Title=@QOD.Item2">@QOD.Item2.ToUpper()</a></h4>
             </div>
             break;
 
@@ -66,12 +68,33 @@
 
 @code {
 
+    System.Uri uri;
+    int Value=0;
+
     List<string> multiplechoicetext = new List<string>();
     List<List<string>> multiplechoicelist = new List<List<string>>();
+    Tuple<int, string, int> QOD;
+
+    protected override void OnInitialized()
+    {
+        uri = nav.ToAbsoluteUri(nav.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Value", out var value))
+        {
+            Value = int.Parse(value);
+        }
+        base.OnInitialized();
+    }
 
     private Tuple<int, string, int[]>[] getQOD()
     {
-        Tuple<int, string, int> QOD = methods.ViewQuestionsofTheDay();
+        if (Value != 0)
+        {
+            QOD = methods.ViewQuestionsofTheDay(Value);
+        }
+        else
+        {
+            QOD = methods.ViewQuestionsofTheDay();
+        }
         int i = 0;
         Tuple<int, string, int[]>[] results = new Tuple<int, string, int[]>[1];
         int[] response = new int[1];

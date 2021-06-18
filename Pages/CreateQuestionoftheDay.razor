@@ -1,5 +1,6 @@
 ﻿@page "/QotDMaker"
 @attribute [Authorize(Policy = "RequireCreation")]
+@inject NavigationManager nav
 @using DataAccess.Models
 @using Microsoft.AspNetCore.Html
 @using static System.Text.Encodings.Web.HtmlEncoder;
@@ -8,9 +9,9 @@
 @inherits OwningComponentBase<Testingstuff>
 
 <div>
-    <h2>SurveyMaker</h2>
+    <h2>Question of the Day Maker</h2>
     <br />
-    <h3>CreateSurvey</h3>
+    <h3>Create Quetion of the Day</h3>
     <label>
         <label for="sname">Survey name:</label>
         <input type="text" @bind="qName"><br>
@@ -154,6 +155,7 @@
             questionText = choices.ToArray();
             qs.SendQuestionMultipleQotD(question, type, start, end, questionText, name);
         }
+        nav.NavigateTo("/ThankYouForMaking");
     }
 }
 

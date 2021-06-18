@@ -12,7 +12,7 @@
 
 
 
-<h4>Survey: @Title.ToUpper() </h4>
+@*<h4>Survey: @Title.ToUpper() </h4>*@
 <!--<label>Survey was open through:--> @*Begin and end dates*@<!--</label>-->
 @{int k = 0;}
 @for (int i = 0; i < getresults(@Value).Length; i++)@*pass in survey id from the query*@
@@ -26,9 +26,9 @@
                 <h4 class="card-title">Question: @theseresults[i].Item2</h4>
             </div>
             <div class="card-block">
-                <h4 class="card-text">Answers are open ended@*link to another page?*@</h4>
-
+                <h4 class="card-text">Answers are open ended@*link to another page?*@<a href="/OpenResults?Value=@surv[i].Item1&Title=@surv[i].Item2">@surv[i].Item2.ToUpper()</a></h4>
             </div>
+            
             break;
 
         case 2:
@@ -77,10 +77,10 @@
     //reads uri value
     System.Uri uri;
     int Value;
-    string Title;
     List<string> multiplechoicetext = new List<string>();
     List<List<string>> multiplechoicelist = new List<List<string>>();
     private Tuple<int, string, int[]>[] theseresults;
+    Tuple<int, string, int, bool>[] surv;
 
     //extracts the parameters from the uri
     protected override void OnInitialized()
@@ -95,7 +95,7 @@
 
     private Tuple<int, string, int[]>[] getresults(int sid)
     {
-        var surv = methods.ViewSurveyQuestions(sid);
+        surv = methods.ViewSurveyQuestions(sid);
         int[] response = new int[surv.Length];
         Tuple<int, string, int[]>[] results = new Tuple<int, string, int[]>[surv.Length];
         int i = 0;

@@ -158,14 +158,11 @@
     private int bindingCount = 0;
     private int tfCount = 0;
     Tuple<int, string, int, bool>[] ViewThisSurveyQuestions;
-    private int SurveyIterator = 0;
-    private int thing = 0;
-    Tuple<int, string, int>[] userResponses;
     List<string> multiplechoicetext = new List<string>();
     List<List<string>> multiplechoicelist = new List<List<string>>();
     System.Uri uri;
     int Value;
-    string Title;
+
     private string user = "";
 
     protected override void OnInitialized()
@@ -182,7 +179,7 @@
         }
         else
         {
-            Value = 17;
+            nav.NavigateTo("/OrderList");
         }
         ViewSurveyQuestions(Value);
         base.OnInitialized();

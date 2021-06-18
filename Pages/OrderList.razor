@@ -27,7 +27,30 @@
         {
             <div class="card mb-4">
                 <div class="card-block">
-                    <h4 class="card-title">@survey.Item2.ToUpper()</h4>
+                    <h4 class="card-title">@survey.Item2.ToUpper() 
+                    @if(DateTime.Now >= survey.Item3 && DateTime.Now <= survey.Item4 && survey.Item5==1 )
+                    { 
+                    <a href="/TakeSurveys?Value=@survey.Item1&Title=@survey.Item2">@survey.Item2 Click to Take</a>
+                    
+                    }
+                    else if(survey.Item5==1&&DateTime.Now <=survey.Item3)
+                    { 
+                    
+                    }
+                    else if(survey.Item5==0 && DateTime.Now <=survey.Item3)
+                    { 
+                    
+                    }
+                    else if(survey.Item5==1&&DateTime.Now >=survey.Item4)
+                    { 
+                    <a href="/SurveyResults?Value=@survey.Item1&Title=@survey.Item2">@survey.Item2 Click to View Results</a>
+                    
+                    }
+                    else if(survey.Item5==0 && DateTime.Now >=survey.Item4)
+                    {
+                    <a href="/QODResults?Value=@survey.Item1&Title=@survey.Item2">@survey.Item2 Click to View Results</a>
+                    }
+                    </h4>
                     <p class="card-text">
                         Start time: @survey.Item3<br />
                         End time: @survey.Item4
@@ -55,7 +78,7 @@
         base.OnInitialized();
     }
 
-    public Tuple<int, string, DateTime, DateTime>[] ViewOrder()
+    public Tuple<int, string, DateTime, DateTime,int>[] ViewOrder()
     {
         return tlist.ViewOrder();
     }

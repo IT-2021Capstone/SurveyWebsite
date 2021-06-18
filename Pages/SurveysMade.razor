@@ -27,7 +27,8 @@
             <ul>
                 @foreach (var survey in ViewCreated())
                 {
-                    <li>@survey.Item1.ToUpper()</li>
+                    
+                    <li><a href="/SurveyResults?Value=@survey.Item2&Title=@survey.Item1">@survey.Item1.ToUpper()</a></li>
                 }
             </ul>
         </div>

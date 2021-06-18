@@ -1,93 +1,239 @@
 ﻿@page  "/TakeSurveys"
-@using SurveyWebsite.Data
-@using SurveyWebsite.Pages
+@attribute [Authorize]
+@inject NavigationManager nav
+@using System.Security.Claims
 @using System.Collections.Generic;
+@using Microsoft.AspNetCore.WebUtilities
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff ts
 @inherits OwningComponentBase<Testingstuff>
 
-<h3 @onload="@AddSurvey">View Surveys</h3>
 
 <div>
     <h4>Survey Title</h4>
 
-    @foreach (var survey in ViewSurveyQuestions(SurveyId))
+    @if (ViewThisSurveyQuestions.Length > count)
     {
 
-        <label>@survey.Item2</label>
-        if (survey.Item3 == 1)
+        @switch (ViewThisSurveyQuestions[count].Item3)
         {
-            <textarea @bind="Input"></textarea>
+            case 1:
+                //open ended, too many responses to display here, use a different page only for those with priviledges
+
+                <div class="card-block">
+                    <form>
+
+                        <label for="qtext1">Question Text:</label>
+                        <br>
+                        <h4 class="card-title">Question: @ViewThisSurveyQuestions[count].Item2</h4>
+                        <label for="openQ1">This will be what the textbox will look like on the survey:</label>
+                        <br>
+                        <textarea id="openQ1 " @bind=bindingString[bindingCount] name="openQ1" rows="4" cols="50">
+                            Write Here
+                            </textarea>
+                        <br><br>
+
+                    </form>
+                    <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, bindingString[bindingCount], ViewThisSurveyQuestions[count].Item3)">Submit Question</button>
+                </div>
+                break;
+
+            case 2:
+
+                <div class="card-block">
+
+
+
+                    <label for="qtext2">Question Text:</label>
+                    <h4 class="card-title">Question: @ViewThisSurveyQuestions[count].Item2</h4>
+                    <br>
+
+                    <label for="true1">True</label>
+                    <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button>
+                    <br>
+                    <label for="false1">False</label>
+                    <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button>
+                    <br>
+
+                </div>
+
+                break;
+
+            case 3:
+                <div class="card-block">
+                    <h4 class="card-title">Question: @ViewThisSurveyQuestions[count].Item2</h4>
+                </div>
+
+
+                //List<string> multiplechoiceresults = methods.ViewMutipleChoice(theseresults[i].Item1).ToList();
+                //double check comeented out code to see if it is needed
+                <div class="card-block">
+
+
+                    @switch (multiplechoicelist[choiceCounter].Count())
+                    {
+                        case 2:
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][0]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][1]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            break;
+                        case 3:
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][0]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][1]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][2]:<button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 2, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            break;
+
+
+                        case 4:
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][0]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][1]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][2]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 2, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][3]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 3, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            break;
+
+                        case 5:
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][0]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button> </h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][1]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][2]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 2, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][3]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 3, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][4]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 4, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+
+                            break;
+
+                        case 6:
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][0]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][1]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][2]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 2, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][3]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 3, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][4]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 4, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][5]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 5, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+
+                            break;
+                        case 7:
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][0]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][1]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][2]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 2, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][3]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 3, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][4]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 4, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][5]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 5, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][6]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 6, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+
+                            break;
+                        case 8:
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][0]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 0, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][1]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 1, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][2]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 2, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][3]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 3, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][4]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 4, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][5]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 5, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][6]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 6, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+                            <h4 class="card-text"> @multiplechoicelist[choiceCounter][7]: <button class="btn btn-primary" @onclick="() => SubmitQuestion(ViewThisSurveyQuestions[count].Item1, 7, ViewThisSurveyQuestions[count].Item3)">Choose Me</button></h4>
+
+                            break;
+                    }
+
+
+
+
+
+                </div>
+                break;
         }
-        else if (survey.Item3 == 2)
+    }
+    else
+    {
+        <button class="btn btn-primary" @onclick="surveyTaken">Click to close</button>
+        
+        <p>Survey finished</p>
+    }
+    <br />
+
+
+</div>
+@code {
+
+
+    private List<string> bindingString = new List<string>();
+    private int count = 0;
+    private int choiceCounter = 0;
+    private int bindingCount = 0;
+    private int tfCount = 0;
+    Tuple<int, string, int, bool>[] ViewThisSurveyQuestions;
+    private int SurveyIterator = 0;
+    private int thing = 0;
+    Tuple<int, string, int>[] userResponses;
+    List<string> multiplechoicetext = new List<string>();
+    List<List<string>> multiplechoicelist = new List<List<string>>();
+    System.Uri uri;
+    int Value;
+    string Title;
+    private string user = "";
+
+    protected override void OnInitialized()
+    {
+        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
-            @current = GetMultiChoice(SurveyId)[0];
-           foreach (string choice in GetMultiChoice(SurveyId))
-           {
-            <input type="radio"
-                   value="@choice"
-                   checked="@(current == choice)"
-                   name="TrueFalse" />@choice.ToString()
-            }
+            user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+        uri = nav.ToAbsoluteUri(nav.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Value", out var value))
+        {
+            Value = int.Parse(value);
 
         }
         else
         {
-            foreach (string choice in GetMultiChoice(SurveyId))
+            Value = 17;
+        }
+        ViewSurveyQuestions(Value);
+        base.OnInitialized();
+    }
+
+    private void surveyTaken()
+    {
+        ts.SendUserTakenSurvey(user, Value);
+        nav.NavigateTo("/ThanksForTaking");
+    }
+
+    private int ViewSurveyQuestions(int sid)
+    {
+        ViewThisSurveyQuestions = ts.ViewSurveyQuestions(sid);
+        foreach (var sq in ViewThisSurveyQuestions)
+        {
+            if (sq.Item3 == 3)
             {
-                <input type="radio"
-                       value="@choice"
-                       checked="@(current == choice)"
-                       name="MultiChoice" />@choice.ToString()
-                }
+                multiplechoicetext = ts.ViewMutipleChoice(sq.Item1).ToList();
+                multiplechoicelist.Add(multiplechoicetext);
             }
         }
-</div>
-@code {
-    private string Input { get; set; }
-    private int SurveyId { get; set; }
-    string current;
-    private void AddSurvey()
-    {
-        ts.AddSurvey("1", DateTime.Today, new DateTime(2021,6,30),"Color Survey");
-        ts.SendQuestion(1,"What is your favorite color?",1);
+        bindingString.Add("1");
+        return ViewThisSurveyQuestions.Length;
+    }
 
-    }
-    private int SurveyIterator = 0;
-    public DateTime ViewEndTime(int id)
+    private void SubmitQuestion(int qid, string response, int type)
     {
-        return ts.ViewEndTime(id);
+        if (type == 1)
+        {
+            ts.SendOpenededResponse(qid, response);
+            bindingCount++;
+        }
+        count++;
     }
-    public DateTime ViewStartTime(int id)
-    {
-        return ts.ViewStartTime(id);
-    }
-    public Tuple<int, string, int, bool>[] ViewSurveyQuestions(int SurveyId)
+
+    private void SubmitQuestion(int qid, int response, int type)
     {
 
-        return ts.ViewSurveyQuestions(SurveyId);
+        if (type == 2)
+        {
+            ts.SendTrueFalseResponse(qid, response);
+            tfCount++;
+        }
+        else if (type == 3)
+        {
+            ts.SendMutipleResponse(qid, response);
+            choiceCounter++;
+        }
+        count++;
     }
-    public string[] GetMultiChoice(int SurveyId)
-    {
-        return ts.ViewMutipleChoice(SurveyId);
-    }
-    public string GetQuestionText(int SurveyId)
-    {
-        return ts.GetQuestionText(SurveyId);
-    }
-    public void SendQuestion(int qid, string text, int type)
-    {
-        ts.SendQuestion(qid, text, type);
 
-    }
-    public void SendMutipleResponse(int qid, int userInput)
-    {
-        ts.SendMutipleResponse(qid, userInput);
 
-    }
-    public void SendOpenededResponse(int Qid, string userString)
-    {
-        ts.SendOpenededResponse(Qid, userString);
-
-    }
-    
 }

@@ -1,5 +1,6 @@
 ﻿@page "/SurveyResults"
 @inject NavigationManager nav
+@attribute [Authorize(Policy = "RequireCreation")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
@@ -77,6 +78,9 @@
     System.Uri uri;
     int Value;
     string Title;
+    List<string> multiplechoicetext = new List<string>();
+    List<List<string>> multiplechoicelist = new List<List<string>>();
+    private Tuple<int, string, int[]>[] theseresults;
 
     //extracts the parameters from the uri
     protected override void OnInitialized()
@@ -88,9 +92,6 @@
         }
         base.OnInitialized();
     }
-
-    List<string> multiplechoicetext = new List<string>();
-    List<List<string>> multiplechoicelist = new List<List<string>>();
 
     private Tuple<int, string, int[]>[] getresults(int sid)
     {
@@ -129,5 +130,5 @@
 
     }
 
-    private Tuple<int, string, int[]>[] theseresults;
+
 }

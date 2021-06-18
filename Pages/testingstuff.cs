@@ -281,7 +281,7 @@ namespace SurveyWebsite.Pages
         public int SendQuestion(int id, string text, int qtype)
         {
             //qtype 1 = open ended, qtype 2 = true/false, qtype 3 = multiple choice
-            Question[] q;
+            
             var surveyID = id;
             var questionType = qtype;
             var questionText = text;
@@ -311,7 +311,7 @@ namespace SurveyWebsite.Pages
         //adds the option to send a quesiton where an answer is not required
         public int SendQuestion(int id, string text, int qtype, bool required)
         {
-            Question[] q;
+           
             var surveyID = id;
             var questionText = text;
             var questionType = qtype;

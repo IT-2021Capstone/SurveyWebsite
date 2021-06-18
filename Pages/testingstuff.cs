@@ -643,5 +643,10 @@ namespace SurveyWebsite.Pages
             SqlParameter param1 = new SqlParameter("@LoginId", UserId);
             _context.Database.ExecuteSqlRaw("EXECUTE DeleteUserRole @LoginId", param1);
         }
+        //public string[] RolesUserIds()
+        //{
+        //    string[] test= new string[1];
+        //    return  test;
+        //}
     }
 }

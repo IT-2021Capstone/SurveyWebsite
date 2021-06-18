@@ -1,6 +1,7 @@
-﻿@page "/first"
-@using DataAccess.Models
 
+﻿@page "/SurveyMaker"
+@attribute [Authorize(Policy = "RequireCreation")]
+@using DataAccessLibrary.Models
 @using System.Collections.Generic
 @inject Testingstuff qs
 @inherits OwningComponentBase<Testingstuff>

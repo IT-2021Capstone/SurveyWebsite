@@ -1,4 +1,5 @@
 ﻿@page "/SurveysMade"
+@attribute [Authorize(Policy = "SignedIn")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims

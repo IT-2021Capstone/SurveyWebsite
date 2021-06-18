@@ -1,5 +1,6 @@
 ﻿
 @page "/HomeAfterLogin"
+@attribute [Authorize(Policy = "SignedIn")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @inject Testingstuff ts
@@ -11,7 +12,7 @@
     {
         ViewQuestionsofTheDay();
     }
-    catch (IndexOutOfRangeException)
+    catch (InvalidOperationException)
     {
         ErrorRediect();
     }
@@ -26,12 +27,12 @@
 @{
     if (ViewQuestionsofTheDay().Item3 != 3) // 1 open response, 2 t/f, 3 mult choice
     {
-    <div>
-        <form>
-            <textarea type="text" @bind="InputValue" />
-        </form>
-        <button class="btn btn-primary" @onclick="() => SendOpenededResponseQotD(ViewQuestionsofTheDay().Item1, InputValue)">Send Me</button>
-    </div>
+        <div>
+            <form>
+                <textarea type="text" @bind="InputValue" />
+            </form>
+            <button class="btn btn-primary" @onclick="() => SendOpenededResponseQotD(ViewQuestionsofTheDay().Item1, InputValue)">Send Me</button>
+        </div>
     }
     else
     {
@@ -42,7 +43,7 @@
                 {
                     <div>
                         <label>@GetAnswerTextQotD(ViewQuestionsofTheDay().Item1)[x]</label>
-                        <button class="btn btn-primary" @onclick="() => SendMutipleResponseQotD(ViewQuestionsofTheDay().Item1,x)" >Choose Me</button>
+                        <button class="btn btn-primary" @onclick="() => SendMutipleResponseQotD(ViewQuestionsofTheDay().Item1,x)">Choose Me</button>
                     </div>
 
                     x = x + 1;

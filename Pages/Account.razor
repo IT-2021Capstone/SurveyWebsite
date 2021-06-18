@@ -1,4 +1,5 @@
 ﻿@page "/Account"
+@attribute [Authorize(Policy = "SignedIn")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
@@ -27,7 +28,7 @@
             @*<img src="" alt="profile" id="profilepic">*@
             <h5>Role: </h5>
             @*<h5>Survey's Created: </h5>
-        <h5>Survey's Taken: </h5>*@
+                <h5>Survey's Taken: </h5>*@
             <a href="Identity/Account/Manage" class="btn btn-primary active profbutton" role="button">Profile Settings</a>
             <button class="btn btn-primary button" @onclick="OpenCurrentSurvey"> Take Current Survey! </button>
         </div>
@@ -105,7 +106,7 @@
     }
 
     private void OpenCurrentSurvey()
-        {
-            NavMngr.NavigateTo("/CurrentSurvey");
-        }
+    {
+        NavMngr.NavigateTo("/CurrentSurvey");
+    }
 }

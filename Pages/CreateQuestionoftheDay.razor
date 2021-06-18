@@ -45,11 +45,8 @@
         {
             <form>
                 <label>
-                    <input type="checkbox" id="required1" name="required1" value=0>
-                    <label for="required1"> Is This Question Optional?</label><br>
                     <label for="qtext1">Question Text:</label>
                     <input type="text" @bind=bindingItem><br>
-
 
                     <br>
                     <label for="openQ1">This will be what the textbox will look like on the survey:</label>
@@ -65,9 +62,6 @@
         {
             <form>
                 <label>
-
-                    <input type="checkbox" id="required2" name="required2" value=0>
-                    <label for="required2"> Is This Question Optional?</label><br>
                     <label for="qtext2">Question Text:</label>
                     <input type="text" @bind=bindingItem><br>
 
@@ -85,8 +79,6 @@
 
         else if (selectedValue == 3)
         {
-            <input type="checkbox" id="required3" name="required3" value=0>
-            <label for="required3"> Is This Question Optional?</label><br>
             <label for="qtext3">Question Text:</label>
 
             <input type="text" @bind=bindingItem><br>

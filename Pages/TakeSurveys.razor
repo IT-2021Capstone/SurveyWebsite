@@ -1,5 +1,93 @@
-﻿<h3>TakeSurveys</h3>
+﻿@page  "/TakeSurveys"
+@using SurveyWebsite.Data
+@using SurveyWebsite.Pages
+@using System.Collections.Generic;
+@inject Testingstuff ts
+@inherits OwningComponentBase<Testingstuff>
 
+<h3 @onload="@AddSurvey">View Surveys</h3>
+
+<div>
+    <h4>Survey Title</h4>
+
+    @foreach (var survey in ViewSurveyQuestions(SurveyId))
+    {
+
+        <label>@survey.Item2</label>
+        if (survey.Item3 == 1)
+        {
+            <textarea @bind="Input"></textarea>
+        }
+        else if (survey.Item3 == 2)
+        {
+            @current = GetMultiChoice(SurveyId)[0];
+           foreach (string choice in GetMultiChoice(SurveyId))
+           {
+            <input type="radio"
+                   value="@choice"
+                   checked="@(current == choice)"
+                   name="TrueFalse" />@choice.ToString()
+            }
+
+        }
+        else
+        {
+            foreach (string choice in GetMultiChoice(SurveyId))
+            {
+                <input type="radio"
+                       value="@choice"
+                       checked="@(current == choice)"
+                       name="MultiChoice" />@choice.ToString()
+                }
+            }
+        }
+</div>
 @code {
+    private string Input { get; set; }
+    private int SurveyId { get; set; }
+    string current;
+    private void AddSurvey()
+    {
+        ts.AddSurvey("1", DateTime.Today, new DateTime(2021,6,30),"Color Survey");
+        ts.SendQuestion(1,"What is your favorite color?",1);
 
+    }
+    private int SurveyIterator = 0;
+    public DateTime ViewEndTime(int id)
+    {
+        return ts.ViewEndTime(id);
+    }
+    public DateTime ViewStartTime(int id)
+    {
+        return ts.ViewStartTime(id);
+    }
+    public Tuple<int, string, int, bool>[] ViewSurveyQuestions(int SurveyId)
+    {
+
+        return ts.ViewSurveyQuestions(SurveyId);
+    }
+    public string[] GetMultiChoice(int SurveyId)
+    {
+        return ts.ViewMutipleChoice(SurveyId);
+    }
+    public string GetQuestionText(int SurveyId)
+    {
+        return ts.GetQuestionText(SurveyId);
+    }
+    public void SendQuestion(int qid, string text, int type)
+    {
+        ts.SendQuestion(qid, text, type);
+
+    }
+    public void SendMutipleResponse(int qid, int userInput)
+    {
+        ts.SendMutipleResponse(qid, userInput);
+
+    }
+    public void SendOpenededResponse(int Qid, string userString)
+    {
+        ts.SendOpenededResponse(Qid, userString);
+
+    }
+    
 }

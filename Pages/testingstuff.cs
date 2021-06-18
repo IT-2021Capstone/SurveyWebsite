@@ -28,31 +28,35 @@ namespace SurveyWebsite.Pages
         //varableName.item2 for question text varableName.item3 for question type
         //varableName.item4 to check in the question is required
         //this will be easier then calling a a sepreate method in html stuff
-        public Tuple<int, string, int, bool>[] ViewSurveyQuestions(int surveyId) 
+        public Tuple<int, string, int, bool>[] ViewSurveyQuestions(int surveyId)
         {
 
             Tuple<int, string, int, bool>[] surveyQuestionList = new Tuple<int, string, int, bool>[_context.Questions.Where(q => q.SurveyId == surveyId).Count()];
             int[] questionid = _context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.QuestionId).ToArray();
             string[] questionText = _context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.QuestionText).ToArray();
             int[] questiontype = _context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.QuestionType).ToArray();
-            bool[] isRequired =_context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.IsRequired).ToArray();
+            bool[] isRequired = _context.Questions.Where(s => s.SurveyId == surveyId).Select(q => q.IsRequired).ToArray();
             for (int i = 0; i < surveyQuestionList.Length; i++)
             {
-                surveyQuestionList[i] =new Tuple<int, string, int, bool>(questionid[i],questionText[i],questiontype[i], isRequired[i]);
+
+                surveyQuestionList[i] = new Tuple<int, string, int, bool>(questionid[i], questionText[i], questiontype[i], isRequired[i]);
+
             }
             return surveyQuestionList;
         }
         //gets the question of the day info the question of the day id, the text for the question and the question type
-        public Tuple<int,string, int> ViewQuestionsofTheDay()
+
+        public Tuple<int, string, int> ViewQuestionsofTheDay()
         {
             //gets today's question ID
-            int current = _context.QuestionOfTheDays.Where(qotd => DateTime.Now >= qotd.DateStarted && DateTime.Now <= qotd.DateEnded).Select(q => q.QuestionOfTheDayId).First();               
+            int current = _context.QuestionOfTheDays.Where(qotd => DateTime.Now >= qotd.DateStarted && DateTime.Now <= qotd.DateEnded).Select(q => q.QuestionOfTheDayId).First();
+
             //gets the question of the day
             Tuple<int, string, int> surveyQuestionList;
             string questionText = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == current).Select(q => q.QuestionOfDayText).First();
             int questiontype = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == current).Select(q => q.QuestionOfDayType).First();
+            surveyQuestionList = new Tuple<int, string, int>(current, questionText, questiontype);
 
-            surveyQuestionList = new Tuple<int, string, int>(current, questionText, questiontype);           
             return surveyQuestionList;
         }
 
@@ -60,7 +64,7 @@ namespace SurveyWebsite.Pages
         //get the text for mutiple choice questions
         public string[] ViewMutipleChoice(int qid)
         {
-            return _context.MutipleChoiceTexts.Where(a => a.QuestionId == qid).Select(b => b.AnswerText).ToArray();        
+            return _context.MutipleChoiceTexts.Where(a => a.QuestionId == qid).Select(b => b.AnswerText).ToArray();
         }
         //same but for question of the day 
         public string[] ViewMutipleChoiceQotD(int qid)
@@ -73,7 +77,7 @@ namespace SurveyWebsite.Pages
         #region start and end times
         //gets start time of a question of the day
         public DateTime ViewStartTimeQotD(int qid)
-        {          
+        {
             return (DateTime)_context.QuestionOfTheDays.Where(a => a.QuestionOfTheDayId == qid).Select(b => b.DateStarted).First();
         }
         //gets the end time for question of the day
@@ -97,7 +101,7 @@ namespace SurveyWebsite.Pages
         //see current list of all surveys on the website that exits, current past and furture
         public Tuple<int, string, DateTime, DateTime>[] ViewOrder()
         {
-            Tuple<int, string, DateTime, DateTime>[] orderList =new Tuple<int, string , DateTime, DateTime>[_context.SurveyOrders.Select(s => s.CurrentOrder).Count()];
+            Tuple<int, string, DateTime, DateTime>[] orderList = new Tuple<int, string, DateTime, DateTime>[_context.SurveyOrders.Select(s => s.CurrentOrder).Count()];
             int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
             listOrder = _context.SurveyOrders.Select(e => e.CurrentOrder).ToArray();
             int counter = 0;
@@ -254,9 +258,9 @@ namespace SurveyWebsite.Pages
         private int GetLastSurvey()
         {
             int sid;
-            if (_context.SurveyOrders.Count() > 0 )
+            if (_context.SurveyOrders.Count() > 0)
                 sid = _context.SurveyOrders.OrderByDescending(q => q.CurrentOrder).FirstOrDefault().CurrentOrder;
-            else 
+            else
             {
                 sid = 0;
             }
@@ -344,7 +348,6 @@ namespace SurveyWebsite.Pages
 
         public int SendQuestionOfTheDay(string questiondaytext, int questiondaytype, DateTime start, DateTime end, string surveyName)
         {
-            
             var questionText = questiondaytext;
             var questionType = questiondaytype;
             DateTime starttime = start;
@@ -369,7 +372,6 @@ namespace SurveyWebsite.Pages
 
         public int SendQuestionMultiple(int id, string text, int qtype, string[] options)
         {
-            
             var surveyID = id;
             var questionType = qtype;
             var questionText = text;
@@ -380,9 +382,8 @@ namespace SurveyWebsite.Pages
             _context.Database.ExecuteSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
                 param1, param2, param3);
 
-            int _questionID = LastQuestionAddedId() ;
+            int _questionID = LastQuestionAddedId();
             SqlParameter qid = new SqlParameter("@questionID", _questionID);
-            
 
             foreach (string o in options)
             {
@@ -397,7 +398,6 @@ namespace SurveyWebsite.Pages
 
         public int SendQuestionMultipleQotD(string questiondaytext, int questiondaytype, DateTime start, DateTime end, string[] options, string surveyName)
         {
-            
             var questionText = questiondaytext;
             var questionType = questiondaytype;
             DateTime starttime = start;
@@ -407,8 +407,6 @@ namespace SurveyWebsite.Pages
             SqlParameter param3 = new SqlParameter("@quetionStart", starttime);
             SqlParameter param4 = new SqlParameter("@questionEnd", endtime);
             _context.Database.ExecuteSqlRaw("EXECUTE AddQuestionOfTheDay @questionText, @questionOfDayType, @quetionStart, @questionEnd ", param1, param2, param3, param4);
-
-           
             int _questionID = LastQuestionAddedIdQotD();
             SqlParameter qid = new SqlParameter("@questionID", _questionID);
             foreach (string o in options)
@@ -466,12 +464,12 @@ namespace SurveyWebsite.Pages
         {
             SqlParameter param1 = new SqlParameter("@userID", userId);
             SqlParameter param2 = new SqlParameter("@surveyID", surveyId);
+
              _context.Database.ExecuteSqlRaw("EXECUTE AddSurveyTaken @userID, @surveyID", param1, param2);
         }
         //sends user answer to a true of false question
         public void SendTrueFalseResponse(int Qid, int userInt)
         {
-            
             int userAnswer = userInt;
             int QuestionID = Qid;
             SqlParameter param1 = new SqlParameter("@userAnwer", userAnswer);
@@ -482,7 +480,6 @@ namespace SurveyWebsite.Pages
         // sends a user response to a question with more then one answer
         public void SendMutipleResponse(int Qid, int userInt)
         {
-            
             int userAnswer = userInt;
             int QuestionID = Qid;
             SqlParameter param1 = new SqlParameter("@userAnwer", userAnswer);

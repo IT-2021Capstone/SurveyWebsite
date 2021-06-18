@@ -2,25 +2,44 @@
     text-align: center;
 }
 
+div {
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.card {
+    /*    flex: 1 0 33%;*/
+}
+
+.card-text {
+    color: black;
+}
+
+.card-title {
+    color: black;
+    background-color: aliceblue;
+    text-align: center;
+}
+
 .card-deck {
     margin-left: 24px;
+    align-content: center;
 }
 
 .card-block {
     background-color: lightgray;
-    width: 200px;
-    object-fit:cover;
-    color: black;
+    object-fit: contain;
 }
+
 
 .flex-column {
     height: 100%;
-/*    width: 33%;*/
+    /*    width: 33%;*/
 }
 
-#profilesidebar {
+#profilebar {
     width: 100%;
-    display: inline-block;
+    display: block;
     height: 200px;
 }
 
@@ -32,13 +51,22 @@ body {
     background-color: #dee2e6;
 }
 
-.profbutton{
-    float:right;
+.profbutton {
+    float: right;
     border-radius: 50px;
+}
+
+a.button {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    /*appearance: button;*/
+    text-decoration: none;
+    color: initial;
 }
 
 .button {
     display: inline-block;
+    margin: auto;
     font-size: 16px;
     cursor: pointer;
     text-align: center;
@@ -51,15 +79,15 @@ body {
     box-shadow: 0 9px #004085;
 }
 
-.button:hover {
-    background-color: aliceblue;
-}
+    .button:hover {
+        background-color: aliceblue;
+    }
 
-.button:active {
-    background-color: aliceblue;
-    box-shadow: 0 5px #004085;
-    transform: translateY(4px);
-}
+    .button:active {
+        background-color: aliceblue;
+        box-shadow: 0 5px #004085;
+        transform: translateY(4px);
+    }
 
 .card-deck span {
     display: none;
@@ -92,18 +120,3 @@ body {
         width: 100%;
     }
 }
-
-
-/* add css for margin fix -- this will not be needed after beta */
-/*.card-deck .card {
-    margin-left: 15px;
-    margin-right: 15px;
-}
-
-    .card-deck .card:not(:last-child) {
-        margin-right: 15px;
-    }
-
-    .card-deck .card:not(:first-child) {
-        margin-left: 15px;
-    }*/

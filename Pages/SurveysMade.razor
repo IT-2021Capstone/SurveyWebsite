@@ -23,17 +23,19 @@
     <h1>Survey's Made</h1>
     <hr />
     <div>
-        @foreach (var survey in ViewCreated())
-        {
-            <div class="card mb-4">
-                <div class="card-block">
-                    <h4 class="card-title">@survey.Item1</h4>
-                    <p class="card-text">
-                    </p>
-                </div>
-            </div>
-            <span></span><br />
-        }
+        <div class="surv">
+            <ul>
+                @foreach (var survey in ViewCreated())
+                {
+                    @*<div class="card mb-4">
+                            <h4 class="card-title">@survey.Item1.ToUpper()</h4>
+                        </div>
+                        <br />*@
+
+                    <li>@survey.Item1.ToUpper()</li>
+                }
+            </ul>
+        </div>
     </div>
 </body>
 </html>

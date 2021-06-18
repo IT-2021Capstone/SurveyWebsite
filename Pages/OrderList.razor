@@ -3,7 +3,7 @@
 @using SurveyWebsite.Pages
 @using System.Security.Claims
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
-@inject Testingstuff ts
+@inject Testingstuff tlist
 @inherits OwningComponentBase<Testingstuff>
 
 
@@ -22,17 +22,33 @@
 <body>
     <h1>Order List</h1>
     <hr />
-    <div>
+    <div class="surv">
         @foreach (var survey in ViewOrder())
         {
-            <div class="card mb-4">
-                <div class="card-block">
-                    <h4 class="card-title">@survey.Item2.ToUpper()</h4>
-                    <p class="card-text">
-                    </p>
-                </div>
-            </div>
-            <span></span><br />
+            if (survey.Item4 < DateTime.Now)
+            {
+                @*<div class="card mb-4">
+                        <div class="card-block">
+                            <a href="/TakeSurvey?Value=@survey.Item2">@survey.Item2.ToUpper()</a>
+                            <p class="card-text">
+                                Start time: @survey.Item3<br />
+                                End time: @survey.Item4
+                            </p>
+                        </div>
+                    </div><br />*@
+            }
+            else
+            {
+                <div class="card mb-4">
+                    <div class="card-block">
+                        <h4 class="card-title">@survey.Item2.ToUpper()</h4>
+                        <p class="card-text">
+                            Start time: @survey.Item3<br />
+                            End time: @survey.Item4
+                        </p>
+                    </div>
+                </div><br />
+            }
         }
     </div>
 </body>
@@ -56,6 +72,6 @@
 
     public Tuple<int, string, DateTime, DateTime>[] ViewOrder()
     {
-        return ts.ViewOrder();
+        return tlist.ViewOrder();
     }
 }

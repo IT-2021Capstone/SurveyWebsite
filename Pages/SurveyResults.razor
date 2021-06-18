@@ -1,7 +1,9 @@
 ﻿@page "/SurveyResults"
+@inject NavigationManager nav
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
+@using Microsoft.AspNetCore.WebUtilities
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff methods
 @inherits OwningComponentBase<Testingstuff>
@@ -70,6 +72,21 @@
 
 
 @code {
+
+    //reads uri value
+    System.Uri uri;
+    int Value;
+
+    //extracts the parameters from the uri
+    protected override void OnInitialized()
+    {
+        uri = nav.ToAbsoluteUri(nav.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Value", out var value))
+        {
+            Value = int.Parse(value);
+        }
+        base.OnInitialized();
+    }
 
     List<string> multiplechoicetext = new List<string>();
     List<List<string>> multiplechoicelist = new List<List<string>>();

@@ -7,44 +7,45 @@
     <ul class="nav flex-column">
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <span class="oi oi-home" aria-hidden="true">Home</span>
             </NavLink>
         </li>
+        <AuthorizeView Policy="SignedIn">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="Account">
+                    <span class="oi oi-account-login" aria-hidden="true">Account</span>
+                </NavLink>
+            </li>
+        </AuthorizeView>
         <li class="nav-item px-3">
-            <NavLink class="nav-link" href="Login">
-                <span class="oi oi-account-login" aria-hidden="true"></span> Login Page
+            <NavLink class="nav-link" href="CurrentSurvey">
+                <span class="oi oi-bolt" aria-hidden="true">Current Survey</span>
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="Data/Users">
-                <span class="oi oi-people" aria-hidden="true"></span> Users
+                <span class="oi oi-people" aria-hidden="true">Users</span>
             </NavLink>
         </li>
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="FAQ">
-                <span class="oi oi-question-mark" aria-hidden="true"></span> FAQ
+                <span class="oi oi-question-mark" aria-hidden="true">FAQ</span>
             </NavLink>
         </li>
-        <li class=" nav-item px-3">
-            <NavLink class="nav-link" href="QotDError">
-                <span class="oi oi-trash" aria-hidden="true"></span> Error
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="SurveyMaker">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Survey Maker
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="CreateAccount">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Create An Account
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="Testing">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Testing
-            </NavLink>
-        </li>
+        <AuthorizeView Policy="RequireCreation">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="SurveyMaker">
+                    <span class="oi oi-list-rich" aria-hidden="true">SurveyMaker</span>
+                </NavLink>
+            </li>
+        </AuthorizeView>
+        <AuthorizeView Policy="RequireCreation">
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="QotdMaker">
+                    <span class="oi oi-list-rich" aria-hidden="true">Testing</span>
+                </NavLink>
+            </li>
+        </AuthorizeView>      
         <li class="nav-item px-3">
             <NavLink class="nav-link" href="SurveyResults">
                 <span class="oi oi-account-login" aria-hidden="true"></span> Survey Results
@@ -55,6 +56,7 @@
                 <span class="oi oi-account-login" aria-hidden="true"></span> QotD Results
             </NavLink>
         </li>
+
     </ul>
 </div>
 

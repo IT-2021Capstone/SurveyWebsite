@@ -1,38 +1,56 @@
 ﻿
 @page "/HomeAfterLogin"
+@attribute [Authorize(Policy = "SignedIn")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @inject Testingstuff ts
+@inject NavigationManager NavMangr
 @inherits OwningComponentBase<Testingstuff>
 
+@{
+    try
+    {
+        ViewQuestionsofTheDay();
+    }
+    catch (InvalidOperationException)
+    {
+        ErrorRediect();
+    }
+}
 
 <h3>Welcome to Centralia College Survey Site!</h3>
 <br />
 <h4>Answer the Question of the day!</h4>
 <br />
-<h6> @QuestionOfTheDayText(22) </h6>
+<h6> @ViewQuestionsofTheDay().Item2 </h6>
 
-<div>
-    @{
-        int x = 0;
-        foreach (string answer in GetAnswerTextQotD(1))
-        {
-            <div>
-                <label>@GetAnswerTextQotD(1)[x]</label>
-                <button class="btn btn-primary" @onclick="() => SendMutipleResponseQotD(1,x)">Choose Me</button>
-            </div>
+@{
+    if (ViewQuestionsofTheDay().Item3 != 3) // 1 open response, 2 t/f, 3 mult choice
+    {
+        <div>
+            <form>
+                <textarea type="text" @bind="InputValue" />
+            </form>
+            <button class="btn btn-primary" @onclick="() => SendOpenededResponseQotD(ViewQuestionsofTheDay().Item1, InputValue)">Send Me</button>
+        </div>
+    }
+    else
+    {
+        <div>
+            @{
+                int x = 0;
+                foreach (string answer in GetAnswerTextQotD(ViewQuestionsofTheDay().Item1))
+                {
+                    <div>
+                        <label>@GetAnswerTextQotD(ViewQuestionsofTheDay().Item1)[x]</label>
+                        <button class="btn btn-primary" @onclick="() => SendMutipleResponseQotD(ViewQuestionsofTheDay().Item1,x)">Choose Me</button>
+                    </div>
 
-            x = x + 1;
-        } }
-</div>
-@*Need a way to decide which of these blocks of code, top or bottom, to show based on the type of question that the QotD is.
-    Also need to figure out how to determine which QotD to use. Right now it is hardcoded to be just the first one.*@
-<div>
-    <form>
-        <input type="text" @bind="InputValue" @bind:event="oninput" />
-        <button class="btn btn-primary" @onclick="() => SendOpenededResponse(1, InputValue)">Send Me</button>
-    </form>
-</div>
+                    x = x + 1;
+                } }
+        </div>
+    }
+}
 
 @code {
 
@@ -48,15 +66,30 @@
         return ts.ViewMutipleChoiceQotD(qid);
     }
 
-    //html working, getting error when calling ts.SendMultipleResponseQotD, full error in TestingStuff.cs
     public void SendMutipleResponseQotD(int qid, int userInput)
     {
         ts.SendMutipleResponseQotD(qid, userInput);
+        QotDRedirect();
     }
 
-    //html working, getting error when calling ts.SendOpenededResponse, full error in TestingStuff.cs
-    public void SendOpenededResponse(int Qid, string userString)
+    public void SendOpenededResponseQotD(int Qid, string userString)
     {
-        ts.SendOpenededResponse(Qid, userString);
+        ts.SendOpenededResponseQotD(Qid, userString);
+        QotDRedirect();
+    }
+
+    public Tuple<int, string, int> ViewQuestionsofTheDay()
+    {
+        return ts.ViewQuestionsofTheDay();
+    }
+
+    private void ErrorRediect()
+    {
+        NavMangr.NavigateTo("/Error Pages/QotDError");
+    }
+
+    private void QotDRedirect()
+    {
+        NavMangr.NavigateTo("/ThanksForTaking");
     }
 }

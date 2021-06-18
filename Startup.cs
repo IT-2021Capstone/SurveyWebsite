@@ -36,9 +36,16 @@ namespace SurveyWebsite
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddScoped<Testingstuff>();
+            services.AddAuthorization(option =>
+            {
+                option.AddPolicy("SuperAdmin", pol => pol.RequireRole("SuperAdmin"));
+                option.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin", "SuperAdmin"));
+                option.AddPolicy("RequireCreation", policy => policy.RequireRole("Admin", "SurveyCreator","TempCreator", "SuperAdmin"));
+                option.AddPolicy("SignedIn", policy => policy.RequireRole("Admin","SurveyCreator", "TempCreator","User","SuperAdmin"));
+            });
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();

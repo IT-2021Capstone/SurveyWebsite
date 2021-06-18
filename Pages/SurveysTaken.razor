@@ -1,8 +1,11 @@
 ﻿@page "/SurveysTaken"
+@attribute [Authorize(Policy = "SignedIn")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
+@using Microsoft.AspNetCore.WebUtilities
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
+@inject NavigationManager nav
 @inject Testingstuff ts
 @inherits OwningComponentBase<Testingstuff>
 
@@ -23,17 +26,16 @@
     <h1>Survey's Taken</h1>
     <hr />
     <div>
-        @foreach (var survey in ViewTaken())
-        {
-            <div class="card mb-4">
-                <div class="card-block">
-                    <h4 class="card-title">@survey.Item1.ToUpper()</h4>
-                    <p class="card-text">
-                    </p>
-                </div>
-            </div>
-            <span></span><br />
-        }
+        <div class="surv">
+            <ul>
+                @foreach (var survey in ViewTaken())
+                {
+                    {
+                        <li><a href="/SurveyResults?Value=@survey.Item2">@survey.Item1.ToUpper()</a></li>
+                    }
+                }
+            </ul>
+        </div>
     </div>
 </body>
 </html>
@@ -53,9 +55,12 @@
         base.OnInitialized();
     }
 
-    public Tuple<string,int>[] ViewTaken()
+    [Parameter]
+    public int Value { get; set; }
+
+
+    public Tuple<string, int>[] ViewTaken()
     {
-        //var n = ts.ViewTaken(user);
         return ts.ViewTaken(user);
     }
 }

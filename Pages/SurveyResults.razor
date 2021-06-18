@@ -1,7 +1,9 @@
 ﻿@page "/SurveyResults"
+@inject NavigationManager nav
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
+@using Microsoft.AspNetCore.WebUtilities
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff methods
 @inherits OwningComponentBase<Testingstuff>
@@ -9,10 +11,10 @@
 
 
 
-<h4>Survey: @*SurveyTitle*@</h4>
+<h4>Survey: @Value.ToString() </h4>
 <!--<label>Survey was open through:--> @*Begin and end dates*@<!--</label>-->
 @{int k = 0;}
-@for (int i = 0; i < getresults(5).Length; i++)@*pass in survey id here instead of a 5*@
+@for (int i = 0; i < getresults(@Value).Length; i++)@*pass in survey id from the query*@
 {
     switch (theseresults[i].Item1)
     {
@@ -70,6 +72,21 @@
 
 
 @code {
+
+    //reads uri value
+    System.Uri uri;
+    int Value;
+
+    //extracts the parameters from the uri
+    protected override void OnInitialized()
+    {
+        uri = nav.ToAbsoluteUri(nav.Uri);
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Value", out var value))
+        {
+            Value = int.Parse(value);
+        }
+        base.OnInitialized();
+    }
 
     List<string> multiplechoicetext = new List<string>();
     List<List<string>> multiplechoicelist = new List<List<string>>();

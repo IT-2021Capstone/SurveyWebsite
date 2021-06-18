@@ -1,14 +1,110 @@
 @page "/Testing"
+@attribute [Authorize(Policy = "RequireCreation")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff ts
 @inherits OwningComponentBase<Testingstuff>
 
-
 <h3>Testing</h3>
 <button class="btn btn-primary" @onclick="questionAdd"> addQuestion </button>
+
+            <!--Question Type:
+<label for="question">Choose the type of Question you want for your next question:</label>
+<select ="selectedValue" name="Type" id="Type">
+    <option value=1>Open</option>
+    <option value=2>True False</option>
+    <option value=3>Mutiple Choice</option>
+</select>
+<br>
+
+
+{
+    <input type="checkbox" id="required3" name="required3" value=0>
+    <label for="required3"> Is This Question Optional?</label>
+    <br>
+    <label for="qtext3">Question Text:</label>
+
+    <input type="text" =questionValue>
+    <br>
+
+    <label for="mutiple1">Pick Your Answer:</label>
+    <br>
+
+    <label for="ctext1">Write Your Choice Text:</label>
+    <input type="text" id="ctext1" name="ctext1">
+    <input type="radio" id="first1" name="mutiple1" value=1>
+    <label for="first1">Option One</label>
+    <br>
+
+    <label for="ctext2">Write Your Choice Text:</label>
+    <input type="text" id="ctext2" name="ctext2">
+    <input type="radio" id="second1" name="mutiple1" value=2>
+    <label for="third1">Option Two</label>
+    <br>
+
+    <label for="ctext3">Write Your Choice Text:</label>
+    <input type="text" id="ctext3" name="ctext3">
+    <input type="radio" id="third1" name="mutiple1" value=3>
+    <label for="third1">Option Three</label>
+    <br>
+    <input type="submit" value="AddNewChoice">-->
+    @*@foreach (QuestionOption QO in question.QOpts)
+        {
+            <label>
+                &nbsp;&nbsp;&nbsp;&nbsp; Option @QO.ID:
+                &nbsp;&nbsp;&nbsp;&nbsp;<textarea>@QO.OptionText</textarea>
+            </label>
+            <br />
+            <br />
+
+        }*@
+    <!--<button class="btn btn-secondary">Add Option</button>
+}
+else if (selectedValue == 2)
+{
+    <form>
+        <label>
+
+            <input type="checkbox" id="required2" name="required2" value=0>
+            <label for="required2"> Is This Question Optional?</label><br>
+            <label for="qtext2">Question Text:</label>
+            <input type="text"=questionValue><br>
+
+            <label for="trueF1">This will be what the Truefalse will look like in the finished Survey:</label>
+            <br>
+            <input type="radio" id="true1" name="TrueF1" value=1>
+            <label for="true1">True</label><br>
+            <input type="radio" id="false1" name="TrueF1" value=0>
+            <label for="false1">False</label><br>
+            <br>
+
+        </label>
+    </form>
+}
+else if (selectedValue == 1)
+{
+    <form>
+        <label>
+            <input type="checkbox" id="required1" name="required1" value=0>
+            <label for="required1"> Is This Question Optional?</label><br>
+            <label for="qtext1">Question Text:</label>
+            <input type="text" =questionValue><br>
+
+
+            <br>
+            <label for="openQ1">This will be what the textbox will look like on the survey:</label>
+            <br>
+            <textarea id="openQ1" name="openQ1" rows="4" cols="50">
+                    Write Here
+                    </textarea>
+            <br><br>
+        </label>
+    </form>
+
+}-->
 
 @code {
 
@@ -17,70 +113,18 @@
 
     protected override void OnInitialized()
     {
-        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated )
+        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
         {
-
             user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
 
-
         base.OnInitialized();
     }
+
     public void questionAdd()
     {
-
-        
-
-        //var survey = ts.AddSurvey(user, DateTime.Now, DateTime.Today, "genral Survey Name");
-        //string[] arr = { "a", "n", "c" };
-        //int open = ts.SendQuestion(survey, "words", 1);
-        //int tfr = ts.SendQuestion(survey, "truefalse", 2);
-        //int opennr = ts.SendQuestion(survey, "not reqired", 1, false);
-        //int tfr2 = ts.SendQuestion(survey, "Required", 2, true);
-        //int mut = ts.SendQuestionMultiple(survey, "what you like", 3, arr);
-        //int qotdm = ts.SendQuestionMultipleQotD("QuestionotD", 3, DateTime.Now, DateTime.Today, arr, "testQofdM");
-        //int qoftopen = ts.SendQuestionOfTheDay("day text", 1, DateTime.Now, DateTime.Today, "testQuestion");
-
-
-        //ts.DeleteQuestion(open);
-
-        //ts.DeleteQuestionQotD(13);
-        //ts.DeleteMutipleChoiceText(mut);
-        //ts.DeleteMutipleChoiceTextQotD(qotdm);
-        //ts.DeleteSurvey(11);
-
-        //write 2 functions to get mutiple choice stuff
-        //works
-
-
-        //ts.SendTrueFalseResponse(tfr, 1);
-        //ts.SendMutipleResponse(mut, 1);
-        //ts.SendMutipleResponseQotD(qotdm, 1);
-        //ts.SendOpenededResponse(open, "hello");
-        //ts.SendOpenededResponseQotD(qoftopen, "hello");
-
-        //ts.SendUserTakenSurvey(user, survey);
-        //var l = ts.ViewOrder();
-
-        //var m = ts.ViewCreated(user);
-        //var n = ts.ViewTaken(user);
-
-        //var b = ts.GetAnswerText(mut);
-        //var c = ts.GetAnswerTextQotD(qotdm);
-        //var d = ts.GetQuestionText(open);
-        //var e = ts.GetQuestionTextQotD(qoftopen);
-        //var f = ts.GetUserOpenResponseQotD(qoftopen);
-        //var g = ts.GetUserResponseMutipleAnswers(mut, 1);
-        //var h = ts.GetUserResponseMutipleAnswersQotD(qotdm, 1);
-        //var i = ts.GetUserResponseOpen(open);
-        //var j = ts.GetUserTrueFalseResponses(tfr);
-        //var k = ts.IsRequredAnswer(tfr2);
-        //ts.UpdateQuestionTextQotD(qoftopen, "words for the words master");
-        //ts.UpdateMutipleChoiceTextQotD(qotdm, "text for the text master");
-        ////ts.UpdateMutipleChoiceText(mut, "here is new text");
-        //ts.UpdateQuestionText(opennr, "this Is more text");
-        //var questions = ts.ViewSurveyQuestions(13);
-
+        ts.SendUserTakenSurvey(user, 12);
+        // ts.ChangeUserRole(user,"superAdmin");
         var te = 3;
 
     }

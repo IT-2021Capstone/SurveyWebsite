@@ -1,101 +1,141 @@
-﻿@page "/SurveyMaker"
+@page "/SurveyMaker"
+@attribute [Authorize(Policy = "RequireCreation")]
 @using DataAccessLibrary.Models
 @using System.Collections.Generic
-@inherits QuestionListBase
+@inject Testingstuff qs
+@inherits OwningComponentBase<Testingstuff>
 
 <div>
     <h3>SurveyMaker</h3>
     <br />
-    @foreach (Question question in Questions)
+    <h3>CreateSurvey</h3>
+    <label>
+        <label for="sname">Survey name:</label>
+        <input type="text" @bind="qName"><br>
+
+        <label for="start">Start date:</label>
+        <input type="date" id="start" name="Survey-start"
+               @bind="startTime"
+               min="2021-01-01" max="2500-12-31">
+        <br>
+        <label for="end">End date:</label>
+        <input type="date" id="end" name="Survey-End"
+               @bind="endTime"
+               min="2021-01-01" max="2500-12-31">
+        <br>
+
+        Question Type:
+        <label for="question">Choose the type of Question you want:</label>
+        <select @bind="selectedValue" name="Type" id="Type">
+            <option value=1>Open</option>
+            <option value=2>True False</option>
+            <option value=3>Mutiple Choice</option>
+        </select>
+        <br>
+        <button @onclick="AddValue" class=" btn btn-primary">AddQuestion</button>
+    </label>
+    @for (int i = 0; i < values.Count; i++)
     {
-        <h4>Question @question.ID</h4>
-        <br />
+        int index = i;
+
         <div>
-
-            <label>
-                Question Type:
-                <select @bind="question.Type" class="custom-select">
-                    <option value="Select" selected disabled="disabled">(Choose Type)</option>
-                    @foreach (var Type in new[] { Question.Qtypes.Multiple_Choice,
-                         Question.Qtypes.Long_Text, Question.Qtypes.True_Or_False })
-                    {
-                        <option value="@Type">@Type.ToString().Replace("_", " ")</option>
-                    }
-                </select>
-            </label>
-            <br />
-
-            <label>Question: </label>
-            <br />
-            <textarea>
-                   @question.QuestionText.ToString()
-            </textarea>
-            <br />
-            <label>Question Options:</label>
-            <br />
-            @if (question.Type == Question.Qtypes.Multiple_Choice)
+            @if (types[index] == 1)
             {
-                @*@foreach (QuestionOption QO in question.QOpts)
+                <p>open eneded Question</p>
+            }
+            @if (types[index] == 2)
+            {
+                <p>True False</p>
+            }
+            @if (types[index] == 3)
+            {
+                <p>Mutiple Choice</p>
+            }
+            <label for="qtext3">Question Text:</label>
+            <input type="text" @onchange="(e)=>UpdateValue(index, e.Value.ToString())" value="@values[i]" />
+            <button @onclick="()=>RemoveValue(index)" class="=btn btn-outline-danger">Remove</button><br />
+            @if (types[index] == 3)
+            {
+
+
+                @for (int k = 0; k < mutipleChoices[counter].Count; k++)
                 {
-                    <label>
-                        &nbsp;&nbsp;&nbsp;&nbsp; Option @QO.ID:
-                        &nbsp;&nbsp;&nbsp;&nbsp;<textarea>@QO.OptionText</textarea>
-                    </label>
-                    <br />
-                    <br />
+                    int index2 = k;
 
-                }*@
-                <button class="btn btn-secondary" @onclick="@NewOption">Add Option</button>
+                    <div>
+                        <label for="qtext3">MutipleChoice:</label>
+                        <input type="text" @onchange="(e)=>UpdateChoice(index2, e.Value.ToString())" value="@choices[k]" />
+                        <button @onclick="()=>RemoveChoice(index2)" class="=btn btn-outline-danger">Remove</button><br />
+                    </div>
+                }
+                <button @onclick="AddChoice" class=" btn btn-primary">AddChoice</button>
             }
-            else if (question.Type == Question.Qtypes.True_Or_False)
-            {
-                <label>
-                    &nbsp;&nbsp;&nbsp;&nbsp; True:
-                    &nbsp;&nbsp;&nbsp;&nbsp;<textarea> </textarea>
-                </label>
-                <br />
-                <label>
-                    &nbsp;&nbsp;&nbsp;&nbsp; False:
-                    &nbsp;&nbsp;&nbsp;&nbsp;<textarea> </textarea>
-                </label>
-            }
-            else
-            {
-                <label>
-                    &nbsp;&nbsp;&nbsp;&nbsp;Long Answer:
-                    &nbsp;&nbsp;&nbsp;&nbsp;<textarea> </textarea>
-                </label>
 
-            }
-            <br />
-            <br />
-            <br />
         </div>
     }
-    <button class="btn btn-primary" @onclick="@NewQuestion">New Question</button>
-    <br />
-    <br />
+    <hr />
+    <div>
+        <button @onclick="HandleSubmit" class="btn btn-success">Submit</button>
+    </div>
+    <hr />
+    @for (int j = 0; j < values.Count; j++)
+    {
+        <p>@values[j]</p>
+    }
+
+
 </div>
 <br />
 <br />
-@code {
+@code
+{
 
-    private void NewOption()
+    private List<string> values = new List<string>();
+    private List<int> types = new List<int>();
+    private List<string> choices = new List<string>();
+    private List<List<string>> mutipleChoices = new List<List<string>>();
+    private int selectedValue = 1;
+    private DateTime startTime = DateTime.Now;
+    private DateTime endTime = DateTime.Now;
+    private string qName;
+    int counter = -1;
+    private void AddValue()
     {
-        
-        
-        
+        values.Add("");
+        types.Add(selectedValue);
+        if (selectedValue == 3 && counter == -1)
+        {
+            mutipleChoices.Add(choices); counter++;
+        }
     }
-    private void NewQuestion()
+    private void AddChoice() { mutipleChoices[counter].Add(""); }
+
+    private void UpdateValue(int i, string value) => values[i] = value;
+    private void RemoveValue(int i) => values.RemoveAt(i);
+    private void UpdateChoice(int k, string choice) => choices[k] = choice;
+    private void RemoveChoice(int i) => choices.RemoveAt(i);
+
+    private void HandleSubmit()
     {
-        Questions = Questions.Concat(new[] {
-            new Question
-            {
-                ID = Questions.Count() + 1,
-                QuestionText = "",
-                
-            }});
+        //Access and validate the values list here
     }
+
+
+    //string[] questionText;
+    //private void SubmitSurvey(string question, int type, DateTime start, DateTime end, string name)
+    //{
+
+    //    if (type != 3)
+    //    {
+    //        qs.SendQuestionOfTheDay(question, type, start, end, name);
+    //    }
+    //    else
+    //    {
+    //        questionText = choices.ToArray();
+    //        qs.SendQuestionMultipleQotD(question, type, start, end, questionText, name);
+    //    }
+    //}
+
 
 
 }

@@ -24,10 +24,10 @@ namespace SurveyWebsite.Pages
         //gets all questions of a survey and question types of a survey 
         //This is stored in a tuple which holds 3 values the first value will be the question ID
         //the second value will be the question text and third will be question Type, and last will be is requried.
-        //To use get data you need out use varableName.item1 for questionID
-        //varableName.item2 for question text varableName.item3 for question type
-        //varableName.item4 to check in the question is required
-        //this will be easier then calling a a sepreate method in html stuff
+        //To use get data you need out use variableName.item1 for questionID
+        //variableName.item2 for question text variableName.item3 for question type
+        //variableName.item4 to check in the question is required
+        //this will be easier then calling a a seperate method in html stuff
         public Tuple<int, string, int, bool>[] ViewSurveyQuestions(int surveyId)
         {
 
@@ -75,7 +75,7 @@ namespace SurveyWebsite.Pages
         #endregion
 
         #region start and end times
-        //gets start time of a question of the day
+        //gets start time for question of the day
         public DateTime ViewStartTimeQotD(int qid)
         {
             return (DateTime)_context.QuestionOfTheDays.Where(a => a.QuestionOfTheDayId == qid).Select(b => b.DateStarted).First();

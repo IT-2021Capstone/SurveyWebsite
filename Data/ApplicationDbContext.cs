@@ -44,7 +44,7 @@ namespace SurveyWebsite.Data
         {
             if (!optionsBuilder.IsConfigured)
             {
-                #warning Change to Azure Connection
+                //#warning Change to Azure Connection
                 optionsBuilder.UseSqlServer("AzureDatabase");
             }
         }

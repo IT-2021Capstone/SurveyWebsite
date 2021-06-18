@@ -59,7 +59,17 @@ namespace SurveyWebsite.Pages
 
             return surveyQuestionList;
         }
+        public Tuple<int, string, int> ViewQuestionsofTheDay(int qid)
+        {
 
+            //gets the question of the day
+            Tuple<int, string, int> surveyQuestionList;
+            string questionText = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(q => q.QuestionOfDayText).First();
+            int questiontype = _context.QuestionOfTheDays.Where(s => s.QuestionOfTheDayId == qid).Select(q => q.QuestionOfDayType).First();
+            surveyQuestionList = new Tuple<int, string, int>(qid, questionText, questiontype);
+
+            return surveyQuestionList;
+        }
 
         //get the text for mutiple choice questions
         public string[] ViewMutipleChoice(int qid)
@@ -99,14 +109,15 @@ namespace SurveyWebsite.Pages
 
         #region Account info
         //see current list of all surveys on the website that exits, current past and furture
-        public Tuple<int, string, DateTime, DateTime>[] ViewOrder()
+        public Tuple<int, string, DateTime, DateTime,int>[] ViewOrder()
         {
-            Tuple<int, string, DateTime, DateTime>[] orderList = new Tuple<int, string, DateTime, DateTime>[_context.SurveyOrders.Select(s => s.CurrentOrder).Count()];
+            Tuple<int, string, DateTime, DateTime,int>[] orderList = new Tuple<int, string, DateTime, DateTime,int>[_context.SurveyOrders.Select(s => s.CurrentOrder).Count()];
             int[] listOrder = new int[_context.SurveyOrders.Select(d => d.CurrentOrder).Count()];
             listOrder = _context.SurveyOrders.Select(e => e.CurrentOrder).ToArray();
             int counter = 0;
             string[] name = new string[listOrder.Length];
             int[] ids = new int[listOrder.Length];
+            int[] type = new int[listOrder.Length];
             DateTime[] startTimes = new DateTime[listOrder.Length];
             DateTime[] endTimes = new DateTime[listOrder.Length];
             foreach (int i in listOrder)
@@ -117,16 +128,18 @@ namespace SurveyWebsite.Pages
                 if (_context.SurveyOrders.Where(s => s.CurrentOrder == i).Select(t => t.SurveyId).First() != null)
                 {
                     ids[counter] = (Int32)_context.SurveyOrders.Where(s => s.CurrentOrder == i).Select(t => t.SurveyId).First();
+                    type[counter] = 1;
                 }
                 else
                 {
                     ids[counter] = (Int32)_context.SurveyOrders.Where(s => s.CurrentOrder == i).Select(t => t.QuestionOfTheDayId).First();
+                    type[counter] = 0;
                 }
                 counter++;
             }
             for (int i = 0; i < orderList.Length; i++)
             {
-                orderList[i] = new Tuple<int, string, DateTime, DateTime>(ids[i], name[i], startTimes[i], endTimes[i]);
+                orderList[i] = new Tuple<int, string, DateTime, DateTime,int>(ids[i], name[i], startTimes[i], endTimes[i], type[i]);
             }
             return orderList;
         }

@@ -1,5 +1,6 @@
 ﻿@page "/SurveyMaker"
 @attribute [Authorize(Policy = "RequireCreation")]
+@inject NavigationManager nav
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
@@ -120,7 +121,7 @@
     int currentQuestion = 0;
     int totalQuestions = 0;
     int currentChoiceLists = 0;
-    private List<Tuple<string, int>> storedQuestions = new List<Tuple<string,int>>();
+    private List<Tuple<string, int>> storedQuestions = new List<Tuple<string, int>>();
     private List<string> choices = new List<string>();
     private void AddChoice() => choices.Add("");
     private void UpdateChoice(int k, string choice) => choices[k] = choice;
@@ -161,7 +162,7 @@
 
         if (type != 3)
         {
-            storedQuestions.Add(new Tuple<string,int>(question, type));
+            storedQuestions.Add(new Tuple<string, int>(question, type));
         }
         else
         {
@@ -174,7 +175,7 @@
         choices.Clear();
         bindingItem = string.Empty;
 
-        if(currentQuestion == totalQuestions)
+        if (currentQuestion == totalQuestions)
         {
             totalQuestions++;
             currentQuestion++;
@@ -196,7 +197,7 @@
                 bus.SendQuestionMultiple(sid, quest.Item1, quest.Item2, totalChoiceList[i].ToArray());
                 i++;
             }
-
+            nav.NavigateTo("/ThankYouForMaking");
         }
     }
 }

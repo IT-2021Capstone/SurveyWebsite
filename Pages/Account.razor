@@ -34,7 +34,7 @@
             <a href="Identity/Account/Manage" class="btn btn-primary active profbutton" role="button">Profile Settings</a>
             <ul>
                 <li><button class="btn btn-primary button" @onclick="goHome"> Answer the QOTD </button></li>
-                <li><button class="btn btn-primary button" @onclick="ViewOrder"> Pick a Survey to Take </button></li>
+                <li><button class="btn btn-primary button" @onclick="TakeSurvey"> Pick a Survey to Take </button></li>
             </ul>
         </div>@*home after login redirect to answer questionoftheday*@
     </div>
@@ -118,4 +118,8 @@
         NavMngr.NavigateTo("/HomeAfterLogin");
     }
 
+    private void TakeSurvey()
+    {
+        NavMngr.NavigateTo("/TakeSurveys");
+    }
 }

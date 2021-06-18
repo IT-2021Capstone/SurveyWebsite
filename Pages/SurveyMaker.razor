@@ -1,5 +1,4 @@
-
-﻿@page "/SurveyMaker"
+@page "/SurveyMaker"
 @attribute [Authorize(Policy = "RequireCreation")]
 @using DataAccessLibrary.Models
 @using System.Collections.Generic
@@ -35,55 +34,55 @@
         <br>
         <button @onclick="AddValue" class=" btn btn-primary">AddQuestion</button>
     </label>
-    @for (int i = 0; i<values.Count;i++)
+    @for (int i = 0; i < values.Count; i++)
     {
         int index = i;
-        
+
         <div>
-            @if(types[index] == 1)
+            @if (types[index] == 1)
             {
-               <p>open eneded Question</p>
+                <p>open eneded Question</p>
             }
-            @if(types[index] == 2)
+            @if (types[index] == 2)
             {
-               <p>True False</p>
+                <p>True False</p>
             }
-            @if(types[index] == 3)
+            @if (types[index] == 3)
             {
-               <p>Mutiple Choice</p>     
+                <p>Mutiple Choice</p>
             }
             <label for="qtext3">Question Text:</label>
-            <input type="text" @onchange="(e)=>UpdateValue(index, e.Value.ToString())"value="@values[i]" />
+            <input type="text" @onchange="(e)=>UpdateValue(index, e.Value.ToString())" value="@values[i]" />
             <button @onclick="()=>RemoveValue(index)" class="=btn btn-outline-danger">Remove</button><br />
             @if (types[index] == 3)
-            {    
+            {
 
 
-                @for (int k = 0; k< mutipleChoices[counter].Count;k++)
-               {
-                   int index2 = k;
+                @for (int k = 0; k < mutipleChoices[counter].Count; k++)
+                {
+                    int index2 = k;
 
-                <div>
-                     <label for="qtext3">MutipleChoice:</label>
-                     <input type="text" @onchange="(e)=>UpdateChoice(index2, e.Value.ToString())"value="@choices[k]" />
-                     <button @onclick="()=>RemoveChoice(index2)" class="=btn btn-outline-danger">Remove</button><br />
-                </div>   
-                } 
-                                <button @onclick="AddChoice" class=" btn btn-primary">AddChoice</button>
+                    <div>
+                        <label for="qtext3">MutipleChoice:</label>
+                        <input type="text" @onchange="(e)=>UpdateChoice(index2, e.Value.ToString())" value="@choices[k]" />
+                        <button @onclick="()=>RemoveChoice(index2)" class="=btn btn-outline-danger">Remove</button><br />
+                    </div>
+                }
+                <button @onclick="AddChoice" class=" btn btn-primary">AddChoice</button>
             }
 
-        </div>   
+        </div>
     }
     <hr />
     <div>
         <button @onclick="HandleSubmit" class="btn btn-success">Submit</button>
     </div>
-    <hr/>
+    <hr />
     @for (int j = 0; j < values.Count; j++)
-    { 
+    {
         <p>@values[j]</p>
     }
-   
+
 
 </div>
 <br />
@@ -96,20 +95,20 @@
     private List<string> choices = new List<string>();
     private List<List<string>> mutipleChoices = new List<List<string>>();
     private int selectedValue = 1;
-    private DateTime startTime =DateTime.Now;
-    private DateTime endTime= DateTime.Now;
+    private DateTime startTime = DateTime.Now;
+    private DateTime endTime = DateTime.Now;
     private string qName;
     int counter = -1;
     private void AddValue()
     {
         values.Add("");
         types.Add(selectedValue);
-        if (selectedValue == 3&&counter ==-1)
+        if (selectedValue == 3 && counter == -1)
         {
             mutipleChoices.Add(choices); counter++;
         }
     }
-    private void AddChoice() { mutipleChoices[counter].Add("");  }
+    private void AddChoice() { mutipleChoices[counter].Add(""); }
 
     private void UpdateValue(int i, string value) => values[i] = value;
     private void RemoveValue(int i) => values.RemoveAt(i);
@@ -122,10 +121,21 @@
     }
 
 
-    private void SubmitSurvey()
-    {
+    //string[] questionText;
+    //private void SubmitSurvey(string question, int type, DateTime start, DateTime end, string name)
+    //{
 
-    }
+    //    if (type != 3)
+    //    {
+    //        qs.SendQuestionOfTheDay(question, type, start, end, name);
+    //    }
+    //    else
+    //    {
+    //        questionText = choices.ToArray();
+    //        qs.SendQuestionMultipleQotD(question, type, start, end, questionText, name);
+    //    }
+    //}
+
 
 
 }

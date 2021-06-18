@@ -27,11 +27,6 @@
             <ul>
                 @foreach (var survey in ViewCreated())
                 {
-                    @*<div class="card mb-4">
-                            <h4 class="card-title">@survey.Item1.ToUpper()</h4>
-                        </div>
-                        <br />*@
-
                     <li>@survey.Item1.ToUpper()</li>
                 }
             </ul>
@@ -50,7 +45,6 @@
 
             user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
         }
-
 
         base.OnInitialized();
     }

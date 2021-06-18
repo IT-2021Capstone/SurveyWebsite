@@ -11,7 +11,7 @@
 
 
 
-<h4>Survey: @Value.ToString() </h4>
+<h4>Survey: @Title.ToUpper() </h4>
 <!--<label>Survey was open through:--> @*Begin and end dates*@<!--</label>-->
 @{int k = 0;}
 @for (int i = 0; i < getresults(@Value).Length; i++)@*pass in survey id from the query*@
@@ -50,7 +50,7 @@
             </div>
 
             //List<string> multiplechoiceresults = methods.ViewMutipleChoice(theseresults[i].Item1).ToList();
-
+            //double check comeented out code to see if it is needed
             <div class="card-block">
                 @for (int j = 0; j < multiplechoicelist[k].Count(); j++)
                 {
@@ -76,6 +76,7 @@
     //reads uri value
     System.Uri uri;
     int Value;
+    string Title;
 
     //extracts the parameters from the uri
     protected override void OnInitialized()
@@ -106,6 +107,7 @@
                 case 1:
                     //since this part is open results of many responses, a seperate page should be used instead
                     //response = methods.GetUserResponseOpen(sq.Item1);
+                    //double check comeented out code to see if it is needed
                     break;
                 case 2:
                     //take counted true/false responses and convert to percentage in html portion

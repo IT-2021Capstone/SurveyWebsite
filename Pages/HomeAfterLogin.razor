@@ -1,5 +1,4 @@
-﻿
-@page "/HomeAfterLogin"
+﻿@page "/HomeAfterLogin"
 @attribute [Authorize(Policy = "SignedIn")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
@@ -14,7 +13,7 @@
     }
     catch (InvalidOperationException)
     {
-        ErrorRediect();
+        ErrorRedirect();
     }
 }
 
@@ -83,7 +82,7 @@
         return ts.ViewQuestionsofTheDay();
     }
 
-    private void ErrorRediect()
+    private void ErrorRedirect()
     {
         NavMangr.NavigateTo("/Error Pages/QotDError");
     }

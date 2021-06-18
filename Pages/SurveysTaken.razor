@@ -31,7 +31,7 @@
                 @foreach (var survey in ViewTaken())
                 {
                     {
-                        <li><a href="/SurveyResults?Value=@survey.Item2">@survey.Item1.ToUpper()</a></li>
+                        <li><a href="/SurveyResults?Value=@survey.Item2&Title=@survey.Item1">@survey.Item1.ToUpper()</a></li>
                     }
                 }
             </ul>
@@ -57,7 +57,8 @@
 
     [Parameter]
     public int Value { get; set; }
-
+    [Parameter]
+    public string Title { get; set; }
 
     public Tuple<string, int>[] ViewTaken()
     {

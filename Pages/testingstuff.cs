@@ -292,17 +292,13 @@ namespace SurveyWebsite.Pages
             {
                 case 1:
                     //open ended question
-                    q = _context.Questions
-                         .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
-                         param1, param2, param3)
-                         .ToArray();
+                    _context.Database.ExecuteSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
+                         param1, param2, param3);
                     break;
                 case 2:
                     //true false question
-                    q = _context.Questions
-                         .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
-                         param1, param2, param3)
-                         .ToArray();
+                    _context.Database.ExecuteSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType",
+                         param1, param2, param3);
                     //unnecessary distinction of cases for now, but if tables or procedures are modified this could be a helpful distinction
                     break;
                 case 3:
@@ -328,15 +324,11 @@ namespace SurveyWebsite.Pages
             {
                 case 1:
                     //open ended question
-                    q = _context.Questions
-                         .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType, @reqired ", param1, param2, param3, param4)
-                         .ToArray();
+                    _context.Database.ExecuteSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType, @reqired ", param1, param2, param3, param4);
                     break;
                 case 2:
                     //true false question
-                    q = _context.Questions
-                         .FromSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType, @reqired ", param1, param2, param3, param4)
-                         .ToArray();
+                    _context.Database.ExecuteSqlRaw("EXECUTE AddNonMutipleQuestion @surveyID, @questionText, @questionType, @reqired ", param1, param2, param3, param4);
                     //unnecessary distinction of cases for now, but if tables or procedures are modified this could be a helpful distinction
                     break;
                 case 3:

@@ -1,4 +1,5 @@
 ﻿@page "/SurveysTaken"
+@attribute [Authorize(Policy = "SignedIn")]
 @using SurveyWebsite.Data
 @using SurveyWebsite.Pages
 @using System.Security.Claims
@@ -56,6 +57,7 @@
 
     [Parameter]
     public int Value { get; set; }
+
 
     public Tuple<string, int>[] ViewTaken()
     {

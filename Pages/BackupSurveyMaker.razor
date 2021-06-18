@@ -1,8 +1,10 @@
 ﻿@page "/SurveyMaker"
 @attribute [Authorize(Policy = "RequireCreation")]
 @inject NavigationManager nav
-@using SurveyWebsite.Data
-@using SurveyWebsite.Pages
+@using DataAccess.Models
+@using Microsoft.AspNetCore.Html
+@using static System.Text.Encodings.Web.HtmlEncoder;
+@using System.Collections.Generic
 @using System.Security.Claims
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject Testingstuff bus

@@ -44,7 +44,7 @@ namespace SurveyWebsite
                 option.AddPolicy("SuperAdmin", pol => pol.RequireRole("SuperAdmin"));
                 option.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin", "SuperAdmin"));
                 option.AddPolicy("RequireCreation", policy => policy.RequireRole("Admin", "SurveyCreator","TempCreator", "SuperAdmin"));
-                option.AddPolicy("SignedIn", policy => policy.RequireRole("Admin","SurveyCreator","User","SuperAdmin"));
+                option.AddPolicy("SignedIn", policy => policy.RequireRole("Admin","SurveyCreator", "TempCreator","User","SuperAdmin"));
             });
             services.AddRazorPages();
             services.AddServerSideBlazor();

@@ -47,26 +47,30 @@
             {
                <p>True False</p>
             }
-
+            @if(types[index] == 3)
+            {
+               <p>Mutiple Choice</p>     
+            }
             <label for="qtext3">Question Text:</label>
             <input type="text" @onchange="(e)=>UpdateValue(index, e.Value.ToString())"value="@values[i]" />
             <button @onclick="()=>RemoveValue(index)" class="=btn btn-outline-danger">Remove</button><br />
-            @if(types[index] == 3)
-            {
-               <p>Mutiple Choice</p>
-               
-               @for (int k = 0; k<choices.Count;k++)
+            @if (types[index] == 3)
+            {    
+
+
+                @for (int k = 0; k< mutipleChoices[counter].Count;k++)
                {
-               int index2 = k;
-        
+                   int index2 = k;
+
                 <div>
                      <label for="qtext3">MutipleChoice:</label>
                      <input type="text" @onchange="(e)=>UpdateChoice(index2, e.Value.ToString())"value="@choices[k]" />
                      <button @onclick="()=>RemoveChoice(index2)" class="=btn btn-outline-danger">Remove</button><br />
                 </div>   
-                }
-             <button @onclick ="AddChoice" class=" btn btn-primary">AddChoice</button>
+                } 
+                                <button @onclick="AddChoice" class=" btn btn-primary">AddChoice</button>
             }
+
         </div>   
     }
     <hr />
@@ -89,19 +93,28 @@
     private List<string> values = new List<string>();
     private List<int> types = new List<int>();
     private List<string> choices = new List<string>();
-    //private string[] mutipleChoices;
+    private List<List<string>> mutipleChoices = new List<List<string>>();
     private int selectedValue = 1;
     private DateTime startTime =DateTime.Now;
     private DateTime endTime= DateTime.Now;
     private string qName;
+    int counter = -1;
+    private void AddValue()
+    {
+        values.Add("");
+        types.Add(selectedValue);
+        if (selectedValue == 3&&counter ==-1)
+        {
+            mutipleChoices.Add(choices); counter++;
+        }
+    }
+    private void AddChoice() { mutipleChoices[counter].Add("");  }
 
-    private void AddValue() { values.Add(""); types.Add(selectedValue); }
-    private void AddChoice() => choices.Add("");
     private void UpdateValue(int i, string value) => values[i] = value;
     private void RemoveValue(int i) => values.RemoveAt(i);
     private void UpdateChoice(int k, string choice) => choices[k] = choice;
     private void RemoveChoice(int i) => choices.RemoveAt(i);
-    
+
     private void HandleSubmit()
     {
         //Access and validate the values list here

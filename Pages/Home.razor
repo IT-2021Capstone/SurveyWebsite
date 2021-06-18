@@ -1,16 +1,43 @@
 ﻿@page "/"
 @page "/Home"
+@using System.Security.Claims
+@using Microsoft.AspNetCore.Authorization;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor _httpContextAccessor
 @inject NavigationManager NavMangr
+
+@{
+    if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated == true)
+        HomeRedirect();
+}
 
 <h3>Home</h3>
 <h2>Welcome to Centralia College Survey Site</h2>
 <p> If you would like to participate in surveys please create an account or login to an existing one.</p>
 <button class="btn btn-primary" @onclick="LoginRediect">Login Page</button>
+
 @code {
     private void LoginRediect()
     {
         NavMangr.NavigateTo("/Login");
     }
+
+    private void HomeRedirect()
+    {
+        NavMangr.NavigateTo("/HomeAfterLogin");
+    }
+
+    private string user = "";
+
+    protected override void OnInitialized()
+    {
+        if (_httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        {
+            user = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+        }
+
+        base.OnInitialized();
+    }
+
 }
 
 

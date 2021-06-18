@@ -1,4 +1,5 @@
 ﻿@page "/SurveyMaker"
+@attribute [Authorize(Policy = "RequireCreation")]
 @using DataAccessLibrary.Models
 @using System.Collections.Generic
 @inherits QuestionListBase
@@ -36,15 +37,15 @@
             @if (question.Type == Question.Qtypes.Multiple_Choice)
             {
                 @*@foreach (QuestionOption QO in question.QOpts)
-                {
-                    <label>
-                        &nbsp;&nbsp;&nbsp;&nbsp; Option @QO.ID:
-                        &nbsp;&nbsp;&nbsp;&nbsp;<textarea>@QO.OptionText</textarea>
-                    </label>
-                    <br />
-                    <br />
+                    {
+                        <label>
+                            &nbsp;&nbsp;&nbsp;&nbsp; Option @QO.ID:
+                            &nbsp;&nbsp;&nbsp;&nbsp;<textarea>@QO.OptionText</textarea>
+                        </label>
+                        <br />
+                        <br />
 
-                }*@
+                    }*@
                 <button class="btn btn-secondary" @onclick="@NewOption">Add Option</button>
             }
             else if (question.Type == Question.Qtypes.True_Or_False)
@@ -82,9 +83,9 @@
 
     private void NewOption()
     {
-        
-        
-        
+
+
+
     }
     private void NewQuestion()
     {
@@ -93,7 +94,7 @@
             {
                 ID = Questions.Count() + 1,
                 QuestionText = "",
-                
+
             }});
     }
 

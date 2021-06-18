@@ -176,7 +176,7 @@ namespace SurveyWebsite.Pages
             int[] answerNum = new int[11];
             for (int i = 0; i < TotalAnswers; i++)
             {
-                answerNum[i] = _context.MutipleChoiceResponses.Where(s => s.QuestionId == questionID && s.MutipleChoiceUserResponse == i + 1).Select(s => s.MutipleChoiceUserResponse).Count();
+                answerNum[i] = _context.MutipleChoiceResponses.Where(s => s.QuestionId == questionID && s.MutipleChoiceUserResponse == (i + 1)).Select(s => s.MutipleChoiceUserResponse).Count();
                 total = total + answerNum[i];
             }
             answerNum[TotalAnswers] = total;
@@ -204,7 +204,7 @@ namespace SurveyWebsite.Pages
             var questionID = qid;
             int[] answerNum = new int[3];
             answerNum[0] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 1).Select(s => s.TrueFalseUserResponse).Count();
-            answerNum[1] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 2).Select(s => s.TrueFalseUserResponse).Count();
+            answerNum[1] = _context.TrueFalseResponses.Where(s => s.QuestionId == questionID && s.TrueFalseUserResponse == 0).Select(s => s.TrueFalseUserResponse).Count();
             answerNum[2] = answerNum[0] + answerNum[1];
             return answerNum;
         }

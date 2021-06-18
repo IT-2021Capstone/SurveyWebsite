@@ -25,30 +25,15 @@
     <div class="surv">
         @foreach (var survey in ViewOrder())
         {
-            if (survey.Item4 < DateTime.Now)
-            {
-                @*<div class="card mb-4">
-                        <div class="card-block">
-                            <a href="/TakeSurvey?Value=@survey.Item2">@survey.Item2.ToUpper()</a>
-                            <p class="card-text">
-                                Start time: @survey.Item3<br />
-                                End time: @survey.Item4
-                            </p>
-                        </div>
-                    </div><br />*@
-            }
-            else
-            {
-                <div class="card mb-4">
-                    <div class="card-block">
-                        <h4 class="card-title">@survey.Item2.ToUpper()</h4>
-                        <p class="card-text">
-                            Start time: @survey.Item3<br />
-                            End time: @survey.Item4
-                        </p>
-                    </div>
-                </div><br />
-            }
+            <div class="card mb-4">
+                <div class="card-block">
+                    <h4 class="card-title">@survey.Item2.ToUpper()</h4>
+                    <p class="card-text">
+                        Start time: @survey.Item3<br />
+                        End time: @survey.Item4
+                    </p>
+                </div>
+            </div><br />
         }
     </div>
 </body>
